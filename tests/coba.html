@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Alpine.js</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 overflow-x-hidden">
+
+    <div x-data="{ open: true }" class="flex h-screen">
+        <!-- Sidebar -->
+        <div :class="open ? 'w-64' : 'w-16'" class="bg-gray-900 text-white h-screen fixed p-5 transition-all duration-300 flex flex-col items-center relative">
+            <!-- Close Button (pojok kanan atas) -->
+            <button @click="open = !open" class="absolute top-3 right-3 text-gray-400 hover:text-red-500">
+                <span x-show="open">✖</span>
+                <span x-show="!open">☰</span>
+            </button>
+
+            <!-- Profile Section -->
+            <div class="mt-10 text-center">
+                <img src="https://via.placeholder.com/80" class="rounded-full border-2 border-gray-300 mx-auto" :class="open ? 'w-20 h-20' : 'w-10 h-10'">
+                <template x-if="open">
+                    <div>
+                        <h2 class="mt-2 font-semibold text-white">Dwi Jullian Daffa</h2>
+                        <span class="text-xs text-green-400">● Online</span>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Navigation Menu -->
+            <ul class="mt-8 space-y-3 w-full">
+                <li class="flex items-center p-3 rounded-lg hover:bg-gray-700 cursor-pointer">
+                    <svg class="w-6 h-6 text-gray-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M9 21V3m5 18v-9m4 4v-5" />
+                    </svg>
+                    <span x-show="open" class="ml-3">Dashboard</span>
+                </li>
+                <li class="flex items-center p-3 rounded-lg hover:bg-gray-700 cursor-pointer">
+                    <svg class="w-6 h-6 text-gray-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span x-show="open" class="ml-3">Job Listings</span>
+                </li>
+                <li class="flex items-center p-3 rounded-lg hover:bg-gray-700 cursor-pointer">
+                    <svg class="w-6 h-6 text-gray-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m4 4H9m8-8H9" />
+                    </svg>
+                    <span x-show="open" class="ml-3">Applications</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Kontainer utama -->
+        <div class="flex-1 min-h-screen transition-all duration-300" :class="open ? 'ml-64' : 'ml-20'">
+            <!-- Navbar -->
+            <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed top-0 left-0 right-0 transition-all duration-300"
+                :class="open ? 'ml-64 w-[calc(100%-16rem)]' : 'ml-20 w-[calc(100%-5rem)]'">
+                <div class="text-lg font-bold">Job Search</div>
+                <div>
+                    <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded">Dashboard</a>
+                </div>
+            </nav>
+
+            <!-- Konten Utama -->
+            <div class="p-5 mt-16">
+                <h2 class="text-2xl font-bold">Selamat Datang di Dashboard</h2>
+                <p class="text-gray-600">Ini adalah halaman utama setelah login.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
