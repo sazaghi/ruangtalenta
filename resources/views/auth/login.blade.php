@@ -1,5 +1,10 @@
 <x-guest-layout>
     <!-- Session Status -->
+
+    <h1 class="text-center font-bold mb-4" style="font-size: 24px; font-weight: bold;">
+        <a href="/">Login</a>
+    </h1>
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
@@ -24,24 +29,41 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex items-center justify-end mt-4 text-xs">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
+                <a class="underline text-sm hover:text-[#084C9B] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A66C2]" href="{{ route('password.request') }} style="color: #0A66C2;"">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+        </div>
+        <!-- Login Button -->
+        <div class="mt-4 text-center">
+            <x-primary-button class="w-full">
+                {{ __('Log In') }}
             </x-primary-button>
         </div>
     </form>
+
+    <!-- OR Separator -->
+    <div class="flex justify-center items-center my-4 mt-4">
+        <div class="flex-grow border-t border-gray-400"></div>
+            <span class="px-2 text-gray-600 text-xs">Or</span>
+        <div class="flex-grow border-t border-gray-400"></div>
+    </div>
+
+            <!-- Social Login -->
+    <div class="flex justify-center space-x-4 mt-4">
+        <a href="#" class="w-12">
+            <img src="{{ asset('images/google-icon.png') }}" alt="Google">
+        </a>
+        <a href="#" class="w-12">
+            <img src="{{ asset('images/linkedin-icon.png') }}" alt="LinkedIn">
+        </a>
+    </div>
+
+    <!-- Sign Up Link -->
+    <div class="flex justify-center text-center text-xs mt-4">
+        Don't have an account?
+        <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Sign Up</a>
+    </div>
 </x-guest-layout>
