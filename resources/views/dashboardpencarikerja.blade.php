@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">
-            {{ __('Dashboard') }}
+            {{ __('Dashboard Pencarikerja') }}
         </h1>
         <div class="flex items-center gap-3 bg-white p-2 rounded-md shadow">
             <input type="text" placeholder="Search.." class="outline-none border-none bg-transparent px-2">

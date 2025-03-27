@@ -36,11 +36,13 @@ class UserRolePermissionSeeder extends Seeder
             $perusahaan = User::create(array_merge([
                 'email' => 'perusahaan@gmail.com',
                 'name' => 'perusahaan',
+                'password' => Hash::make('perusahaan')
             ], $default_user_value));
     
             $pencarikerja = User::create(array_merge([
                 'email' => 'pencarikerja@gmail.com',
                 'name' => 'pencarikerja',
+                'password' => Hash::make('pencarikerja')
             ], $default_user_value));
     
             echo "Membuat roles...\n";
