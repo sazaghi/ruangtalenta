@@ -12,9 +12,9 @@ class SidebarController extends Controller
         $user = Auth::user();
 
         if ($user->hasRole('perusahaan')) {
-            return view('sidebarperusahaan');
+            return view('sidebarperusahaan', compact('user'));
         } elseif ($user->hasRole('pencarikerja')) {
-            return view('sidebarpencarikerja');
+            return view('sidebarpencarikerja', compact('user'));
         }
 
         return abort(403, 'Unauthorized');

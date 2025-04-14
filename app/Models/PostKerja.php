@@ -15,7 +15,13 @@ class PostKerja extends Model
         'user_id',
         'location',
         'salary',
-        'status', // Bisa 'open' atau 'closed'
+        'experience',
+        'job_type',
+        'deadline'
+    ];
+
+    protected $casts = [
+        'selection_methods' => 'array', // Mengubah JSON ke array saat diambil dari DB
     ];
 
     /**
@@ -37,7 +43,7 @@ class PostKerja extends Model
     /**
      * Relasi ke Application (Melacak siapa saja yang melamar pekerjaan ini)
      */
-    public function applications()
+    public function Lamarans()
     {
         return $this->hasMany(Lamaran::class, 'post_kerjas_id');
     }

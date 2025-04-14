@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('title');
             $table->text('description');
             $table->integer('salary');
+            $table->json('selection_methods')->nullable();
             $table->timestamps();
         });
     }

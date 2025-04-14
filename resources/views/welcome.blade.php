@@ -4,42 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareerHub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            background: url('https://images-ext-1.discordapp.net/external/1saoSJ-XeHslgoTnTECpy59lZ_1XjzFRVBlk_FfmtnI/https/media.tenor.com/pqgfsPUQ-REAAAPo/panosso.mp4') center center / cover no-repeat;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+    </style>
+    
 </head>
-<body class="bg-gray-100">
-    <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
-        <div class="text-lg font-bold">Job Search</div>
-        <div class="flex space-x-4">
-            <a href="{{ route('forums.index') }}" class="px-4 py-2 text-blue-600">Forum</a>
-            @auth
-                <a href="{{ route('dashboard') }}" class="px-4 py-2 bg-blue-600 text-white rounded">Dashboard</a>
-            @else
-                <a href="{{ route('register') }}" class="px-4 py-2 text-blue-600">Register</a>
-                <a href="{{ route('login') }}" class="px-4 py-2 bg-blue-600 text-white rounded">Login</a>
-            @endauth
-        </div>
-    </nav>
+<body class="bg-light">
+    @include('layouts.navigation')
 
     <!-- Hero Section -->
-    <div class="relative w-full h-screen bg-cover bg-center" style="background-image: url('https://images-ext-1.discordapp.net/external/1saoSJ-XeHslgoTnTECpy59lZ_1XjzFRVBlk_FfmtnI/https/media.tenor.com/pqgfsPUQ-REAAAPo/panosso.mp4'); background-size: cover; background-position: center;">
-        <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-black bg-opacity-50 px-6">
-            <h1 class="text-3xl font-bold">Bangun Karier Impianmu di Ruang Talenta</h1>
-            <p class="text-gray-300 mt-2">Jelajahi ribuan lowongan kerja yang sesuai dengan keahlian dan passionmu</p>
-            <div class="mt-4 flex justify-center">
-                <input type="text" class="w-1/2 px-4 py-2 border rounded-l" placeholder="Posisi atau perusahaan">
-                <button class="px-6 py-2 bg-red-500 text-white rounded-r">Cari</button>
-            </div>            
-            <div class="mt-4 flex justify-center space-x-4">
-                <select class="px-4 py-2 border rounded text-black">
+    <div class="hero-section">
+        <div class="hero-overlay d-flex flex-column justify-content-center align-items-center text-center px-3">
+            <h1 class="display-5 fw-bold">Bangun Karier Impianmu di Ruang Talenta</h1>
+            <p class="text-light mt-2">Jelajahi ribuan lowongan kerja yang sesuai dengan keahlian dan passionmu</p>
+            
+            <div class="mt-4 d-flex w-75">
+                <input type="text" class="form-control rounded-start" placeholder="Posisi atau perusahaan">
+                <button class="btn btn-danger rounded-end px-4">Cari</button>
+            </div>
+
+            <div class="mt-4 d-flex flex-wrap justify-content-center gap-2">
+                <select class="form-select w-auto">
                     <option>Lokasi</option>
                 </select>
-                <select class="px-4 py-2 border rounded text-black">
+                <select class="form-select w-auto">
                     <option>Gaji</option>
                 </select>
-                <select class="px-4 py-2 border rounded text-black">
+                <select class="form-select w-auto">
                     <option>Industri</option>
                 </select>
-                <select class="px-4 py-2 border rounded text-black">
+                <select class="form-select w-auto">
                     <option>Pengalaman</option>
                 </select>
             </div>
@@ -47,65 +63,71 @@
     </div>
 
     <!-- Job Categories -->
-    <div class="max-w-6xl mx-auto py-12">
-        <h2 class="text-2xl font-bold text-center mb-6">Cari Berdasarkan Kategori</h2>
-        <div class="flex justify-center space-x-4">
-            <button class="px-4 py-2 border rounded">Teknologi & IT</button>
-            <button class="px-4 py-2 border rounded">Keuangan & Perbankan</button>
-            <button class="px-4 py-2 border rounded">Manufaktur & Teknik</button>
-            <button class="px-4 py-2 border rounded">Industri Kreatif & Desain</button>
+    <div class="container py-5">
+        <h2 class="h4 fw-bold text-center mb-4">Cari Berdasarkan Kategori</h2>
+        <div class="d-flex justify-content-center flex-wrap gap-3">
+            <button class="btn btn-outline-secondary">Teknologi & IT</button>
+            <button class="btn btn-outline-secondary">Keuangan & Perbankan</button>
+            <button class="btn btn-outline-secondary">Manufaktur & Teknik</button>
+            <button class="btn btn-outline-secondary">Industri Kreatif & Desain</button>
         </div>
     </div>
-    
-    <div class="max-w-6xl mx-auto py-12">
-        <h2 class="text-3xl font-bold text-center mb-6">Featured Jobs</h2>
-        <div class="flex justify-center">
-            <button class="px-6 py-3 bg-black text-white rounded-lg">View All Jobs</button>
+
+    <!-- Featured Jobs -->
+    <div class="container py-5">
+        <h2 class="h3 fw-bold text-center mb-4">Featured Jobs</h2>
+        <div class="text-center mb-4">
+            <button class="btn btn-dark px-4 py-2" href="{{ route('job.show') }}" >View All Jobs</button>
         </div>
-        
-        <div class="grid grid-cols-3 gap-6 mt-8">
+
+        <div class="row g-4">
             @foreach ($jobs as $job)
-                <div class="bg-white p-6 rounded-lg shadow border">
-                    <!-- Header -->
-                    <div class="flex items-center space-x-3">
-                        <img src="https://via.placeholder.com/50" alt="Company Logo" class="w-12 h-12 rounded">
-                        <div>
-                            <h3 class="font-bold">{{ $job->company_name }}</h3>
-                            <p class="text-sm text-gray-600">{{ $job->location }}</p>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://via.placeholder.com/50" alt="Company Logo" class="rounded me-3">
+                                <div>
+                                    <h5 class="mb-0">{{ $job->company_name }}</h5>
+                                    <small class="text-muted">{{ $job->location }}</small>
+                                </div>
+                            </div>
+
+                            <p class="fw-semibold mb-1">{{ $job->title }}</p>
+                            <small class="text-muted">{{ $job->created_at->diffForHumans() }}</small>
+
+                            <div class="mt-2 d-flex flex-wrap gap-2">
+                                <span class="badge bg-light text-dark">#PHP</span>
+                                <span class="badge bg-light text-dark">#Laravel</span>
+                            </div>
+
+                            <p class="fw-bold fs-5 mt-3">Rp {{ number_format($job->salary, 0, ',', '.') }}</p>
+
+                            @if (auth()->check() && auth()->user()->hasRole('pencarikerja'))
+                                <form action="{{ route('job.apply', $job->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary w-100 mt-3">Apply</button>
+                                </form>
+                            @endif
                         </div>
                     </div>
-
-                    <!-- Posisi dan Usia Posting -->
-                    <div class="mt-3">
-                        <p class="font-semibold">{{ $job->title }}</p>
-                        <p class="text-xs text-gray-500">{{ $job->created_at->diffForHumans() }}</p>
-                    </div>
-
-                    <!-- Skill Tags -->
-                    <div class="flex gap-2 mt-2">
-                        <span class="bg-gray-200 text-gray-700 px-2 py-1 text-xs rounded">#PHP</span>
-                        <span class="bg-gray-200 text-gray-700 px-2 py-1 text-xs rounded">#Laravel</span>
-                    </div>
-
-                    <!-- Gaji -->
-                    <p class="font-bold text-lg mt-3">Rp {{ number_format($job->salary, 0, ',', '.') }}</p>
-
-                    <!-- Tombol Apply -->
-                    @if (auth()->check() && auth()->user()->hasRole('pencarikerja'))
-                        <form action="{{ route('job.apply', $job->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="mt-4 block w-full text-center bg-blue-600 text-white py-2 px-4 rounded">
-                                Apply
-                            </button>
-                        </form>
-                    @endif
-
                 </div>
             @endforeach
+
             @if ($jobs->isEmpty())
-                <p class="text-gray-500 col-span-3 text-center">No job postings available.</p>
+                <p class="text-muted text-center">No job postings available.</p>
             @endif
         </div>
     </div>
+@if(session('success'))
+    <script>
+        Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        confirmButtonColor: '#3085d6'
+    });
+    </script>
+ @endif
 </body>
 </html>

@@ -1,51 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareerHub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruang Talenta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Navbar -->
-    <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
-        <div class="text-lg font-bold">CareerHub</div>
-        <div>
-            @auth
-                <a href="{{ route('dashboard') }}" class="px-4 py-2 bg-blue-600 text-white rounded">Dashboard</a>
-            @else
-                <a href="{{ route('register') }}" class="px-4 py-2 text-blue-600">Register</a>
-                <a href="{{ route('login') }}" class="px-4 py-2 bg-blue-600 text-white rounded">Login</a>
-            @endauth
-        </div>
-    </nav>
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+    <div class="flex items-center space-x-4">
+      <img src="logo.png" alt="Logo" class="h-8 w-auto">
+      <span class="text-xl font-bold">Ruang Talenta</span>
+    </div>
+    <div class="flex items-center space-x-6">
+      <a href="#" class="text-gray-600 hover:text-blue-500">Home</a>
+      <a href="#" class="text-blue-600 font-semibold">Find a Job</a>
+      <a href="#" class="px-4 py-2 border rounded-full text-sm">Untuk Perusahaan</a>
+      <button class="text-gray-600">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4s-4 1.79-4 4 1.79 4 4 4zM12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
 
-    <!-- Full-Screen Carousel -->
-    <div class="relative w-full h-screen bg-cover bg-center" style="background-image: url('https://cdn.discordapp.com/banners/1076841177640345690/a_6e3c014a24b3a6a998d7bc7fc074c8ba.gif?size=4096'); background-size: cover; background-position: center;">
-        <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-black bg-opacity-50 px-6">
-            <h1 class="text-3xl font-bold">Bangun Karier Impianmu di Ruang Talenta</h1>
-            <p class="text-gray-300 mt-2">Jelajahi ribuan lowongan kerja yang sesuai dengan keahlian dan passionmu</p>
-            <div class="mt-4 flex justify-center">
-                <input type="text" class="w-1/2 px-4 py-2 border rounded-l" placeholder="Posisi atau perusahaan">
-                <button class="px-6 py-2 bg-red-500 text-white rounded-r">Cari</button>
-            </div>            
-            <div class="mt-4 flex justify-center space-x-4">
-                <select class="px-4 py-2 border rounded text-black">
-                    <option>Lokasi</option>
-                </select>
-                <select class="px-4 py-2 border rounded text-black">
-                    <option>Gaji</option>
-                </select>
-                <select class="px-4 py-2 border rounded text-black">
-                    <option>Industri</option>
-                </select>
-                <select class="px-4 py-2 border rounded text-black">
-                    <option>Pengalaman</option>
-                </select>
-            </div>
+  <!-- Hero Banner -->
+  <section class="bg-gradient-to-b from-gray-100 to-white py-8 px-4">
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <img src="https://i.ibb.co/8YVzZpb/robot-hero.png" alt="Banner" class="w-full h-60 object-cover">
+      <div class="text-center px-6 py-6">
+        <h1 class="text-2xl font-bold">Temukan Pekerjaan Impianmu di Sini!</h1>
+        <p class="text-gray-600 mt-2">Cari pekerjaan sesuai keahlian dan minatmu di berbagai industri</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Section -->
+  <div class="max-w-7xl mx-auto px-4 py-8 flex">
+    <!-- Sidebar Filter -->
+    <aside class="w-1/4 pr-6">
+      <h2 class="font-semibold mb-4">Filter & Sorting</h2>
+
+      <div class="mb-6">
+        <label class="block mb-2 font-medium">Lokasi</label>
+        <select class="w-full px-4 py-2 border rounded">
+          <option>Kota/Provinsi</option>
+        </select>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="font-medium mb-2">Industri</h3>
+        <ul class="space-y-1 text-sm text-gray-700">
+          <li><input type="checkbox" class="mr-2">Teknologi & IT</li>
+          <li><input type="checkbox" class="mr-2">Keuangan & Perbankan</li>
+          <li><input type="checkbox" class="mr-2">Manufaktur & Bahan</li>
+          <li><input type="checkbox" class="mr-2">Kesehatan & Medis</li>
+          <li><input type="checkbox" class="mr-2">Lainnya</li>
+        </ul>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="font-medium mb-2">Gaji</h3>
+        <input type="range" class="w-full">
+      </div>
+    </aside>
+
+    <!-- Job List -->
+    <section class="w-3/4">
+      <!-- Search & Sort -->
+      <div class="flex justify-between mb-6">
+        <div class="flex w-2/3 space-x-2">
+          <input type="text" placeholder="Masukkan kata kunci..." class="w-full px-4 py-2 border rounded">
+          <button class="bg-red-500 text-white px-4 rounded">Cari</button>
         </div>
-    </div>    
+        <div>
+          <select class="px-4 py-2 border rounded">
+            <option>Newest Post</option>
+            <option>Terpopuler</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Job Cards -->
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white border p-4 rounded-lg shadow-sm">
+          <div class="mb-2"><img src="https://via.placeholder.com/50" alt="Logo"></div>
+          <p class="font-semibold">(Nama perusahaan)</p>
+          <p class="text-sm text-gray-500">(Lokasi)</p>
+          <p class="mt-1 font-medium">(Posisi yang ditawarkan)</p>
+          <p class="text-xs text-gray-400">(Usia postingan)</p>
+          <p class="mt-2 font-bold text-gray-700">(Gaji)</p>
+          <button class="mt-2 bg-blue-500 text-white px-4 py-1 rounded text-sm">Apply</button>
+        </div>
+
+        <!-- Ulangi card sesuai kebutuhan -->
+        <div class="bg-white border p-4 rounded-lg shadow-sm">
+          <div class="mb-2"><img src="https://via.placeholder.com/50" alt="Logo"></div>
+          <p class="font-semibold">(Nama perusahaan)</p>
+          <p class="text-sm text-gray-500">(Lokasi)</p>
+          <p class="mt-1 font-medium">(Posisi yang ditawarkan)</p>
+          <p class="text-xs text-gray-400">(Usia postingan)</p>
+          <p class="mt-2 font-bold text-gray-700">(Gaji)</p>
+          <button class="mt-2 bg-blue-500 text-white px-4 py-1 rounded text-sm">Apply</button>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

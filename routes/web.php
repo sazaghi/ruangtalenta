@@ -7,26 +7,40 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\LamaranController;
 use App\Http\Controllers\ForumController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\NotificationController;
 use App\Models\PostKerja;
+use App\Http\Controllers\PortofolioController;
+
 
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    $jobs = PostKerja::latest()->take(5)->get(); // Ambil 5 pekerjaan terbaru
+    return view('welcome', compact('jobs'));
+})->name('home');
 
 // Route dashboard dengan akses berdasarkan role
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/job-applicants/{id}', [DashboardController::class, 'getJobApplicants']);
 
-    Route::get('/job', function () { 
-        return view('jobsubmit.submit');
-    })->name('job.form');
+    Route::get('/chart-data/{job}', [DashboardController::class, 'getChartData']);
 
-    Route::get('/job/tracking-lamaran', [LamaranController::class, 'tracking'])->name('job.track');
+    Route::get('/job', [JobPostController::class, 'index'])->name('job.index');
+    Route::get('/alljob', [JobPostController::class, 'show'])->name('job.show');
+    Route::get('/filterjob', [JobPostController::class, 'alljob'])->name('job.alljob');
 
-    Route::post('/job', [JobPostController::class, 'store'])->name('postkerja');
+    Route::get('tracking-lamaran', [LamaranController::class, 'tracking'])->name('job.tracking');
+
+    Route::post('/job', [JobPostController::class, 'store'])->name('job.store');
     Route::post('/job/{job}/apply', [LamaranController::class, 'store'])->name('job.apply');
+    Route::get('/job/{id}/edit', [JobPostController::class, 'edit'])->name('job.edit');
+    Route::put('/job/{id}', [JobPostController::class, 'update'])->name('job.update');
+    Route::delete('/job/{id}', [JobPostController::class, 'destroy'])->name('job.destroy');
+
+
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,20 +48,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('forums', ForumController::class);
-    Route::get('forums/{forum}/posts/create', [PostController::class, 'create'])->name('posts.create');
-    Route::post('forums/{forum}/posts', [PostController::class, 'store'])->name('posts.store');
-    Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
-    Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
-});
 
-Route::get('/', function () {
-    $jobs = PostKerja::latest()->take(5)->get(); // Ambil 5 pekerjaan terbaru
-    return view('welcome', compact('jobs'));
+    Route::post('/interview/schedule', [InterviewController::class, 'schedule'])->name('interview.schedule');
+
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+
+    Route::get('/portfolio', [PortofolioController::class, 'index'])->name('portfolio');
+    Route::post('/cv-upload', [PortofolioController::class, 'uploadCV'])->name('cv.upload');
+    Route::post('/education-store', [PortofolioController::class, 'storeEducation'])->name('education.store');
+
+
 });
 
 // Route untuk Role Management
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/roles', [RoleController::class, 'index']);
 });
+
+
+Route::get('/test-notification', [DashboardController::class, 'sendNotification'])->name('test.notification')->middleware('auth');
+
 
 require __DIR__.'/auth.php';
