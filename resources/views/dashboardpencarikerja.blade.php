@@ -1,106 +1,95 @@
 <x-app-layout>
+    @php
+        $radius = 45;
+        $circumference = 2 * pi() * $radius;
+        $offset = $circumference - ($circumference * $profileCompletion / 100);
+    @endphp
     <x-slot name="header">
-        <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">
-            {{ __('Dashboard Pencarikerja') }}
-        </h1>
-        <div class="flex items-center gap-3 bg-white p-2 rounded-md shadow">
-            <input type="text" placeholder="Search.." class="outline-none border-none bg-transparent px-2">
-            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.5-5.65a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405M16 3.6a9 9 0 11-3.9 3.9"/>
-            </svg>
+        <div class="flex justify-between items-center mb-3">
+            <h1 class="text-2xl font-bold">Halo, {{ $user->name }}!</h1>
         </div>
     </x-slot>
-    <div class="grid grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-4 rounded-lg shadow flex items-center gap-3">
-            <div class="bg-yellow-200 p-3 rounded-full">
-                <svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold">10</h3>
-                <p class="text-gray-500">Posted Job</p>
-            </div>
-        </div>
+    <div class="container my-4">
+        <div class="row g-4">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        Kelengkapan Profile
+                    </div>
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <!-- Bagian kiri -->
+                        <div>
+                            <h6 class="card-title mb-2">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="icon" width="20" class="me-2">
+                                Tugas yang belum selesai :
+                            </h6>
+                            <ul class="mb-3">
+                                <li>Tambahkan No. handphone</li>
+                                <li>Tambahkan Alamat</li>
+                                <li>Tambahkan Bio</li>
+                            </ul>
+                            <a href="#" class="btn btn-sm btn-primary">Lengkapi Sekarang</a>
+                        </div>
 
-        <div class="bg-white p-4 rounded-lg shadow flex items-center gap-3">
-            <div class="bg-yellow-200 p-3 rounded-full">
-                <svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l4-4 4 4m0-4l-4-4-4 4"/>
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold">80</h3>
-                <p class="text-gray-500">Interview Schedule</p>
-            </div>
-        </div>
+                        <!-- Bagian kanan (circular progress) -->
+                        <div class="text-center">
+    <svg width="100" height="100">
+        <!-- Background circle -->
+        <circle cx="50" cy="50" r="{{ $radius }}" stroke="#eee" stroke-width="10" fill="none"/>
 
-        <div class="bg-white p-4 rounded-lg shadow flex items-center gap-3">
-            <div class="bg-yellow-200 p-3 rounded-full">
-                <svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M9 21V3m5 18v-9m4 4v-5"/>
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold">1.9k</h3>
-                <p class="text-gray-500">Applications</p>
-            </div>
-        </div>
+        <!-- Foreground progress circle -->
+        <circle cx="50" cy="50" r="{{ $radius }}" stroke="#ffc107" stroke-width="10" fill="none"
+                stroke-dasharray="{{ $circumference }}"
+                stroke-dashoffset="{{ $offset }}"
+                stroke-linecap="round"
+                transform="rotate(-90 50 50)" />
 
-        <div class="bg-white p-4 rounded-lg shadow flex items-center gap-3">
-            <div class="bg-yellow-200 p-3 rounded-full">
-                <svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
+        <!-- Text percentage -->
+        <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="18">
+            {{ $profileCompletion }}%
+        </text>
+    </svg>
+    <small class="text-muted d-block">Profile Complete</small>
+</div>
+
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-header">
+                        Recent Apply Job
+                    </div>
+                    <div class="card-body">
+                        @forelse($recentJobs as $job)
+                            <div class="mb-3">
+                                <p class="text-gray-900 font-medium">{{ $job->postKerja->judul }}</p>
+                                <p class="text-red-500 text-sm">{{ $job->postKerja->perusahaan->nama ?? 'Perusahaan' }}</p>
+                            </div>
+                        @empty
+                            <p class="text-gray-500 text-sm">Belum ada job yang kamu apply.</p>
+                        @endforelse
+                    </div>
+                </div>
             </div>
-            <div>
-                <h3 class="text-xl font-bold">05</h3>
-                <p class="text-gray-500">Saved Candidates</p>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        Featured
+                    </div>
+                    <div class="card-body">
+                        @forelse($upcomingTests as $test)
+                            <div class="mb-3 text-sm">
+                                <p class="font-bold text-orange-600">📁 {{ $test->postKerja->perusahaan->nama ?? '-' }}</p>
+                                <p>📝 {{ $test->tipe }}</p>
+                                <p>💻 {{ $test->metode }}</p>
+                                <p class="text-purple-600 text-xs mt-1">📅 {{ \Carbon\Carbon::parse($test->jadwal)->format('d F Y | H:i') }} WIB</p>
+                            </div>
+                            <hr class="my-2">
+                        @empty
+                            <p class="text-gray-500 text-sm">Belum ada jadwal interview atau test.</p>
+                        @endforelse
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Job Views & Posted Jobs -->
-    <div class="grid grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold mb-4">Job Views</h2>
-            <div class="border rounded-md p-2">
-                <select class="w-full border-none outline-none">
-                    <option>Web & Mobile Prototype Designer</option>
-                </select>
-            </div>
-            <img src="https://via.placeholder.com/300x150" alt="Graph" class="w-full mt-4">
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold mb-4">Posted Jobs</h2>
-            <ul class="space-y-3">
-                <li class="flex justify-between items-center border-b pb-2">
-                    <span>Web & Mobile Prototype</span>
-                    <span class="text-gray-500 text-sm">Full-time, Spain</span>
-                </li>
-                <li class="flex justify-between items-center border-b pb-2">
-                    <span>Document Writer</span>
-                    <span class="text-gray-500 text-sm">Part-time, Bangkok</span>
-                </li>
-                <li class="flex justify-between items-center border-b pb-2">
-                    <span>Product Designer</span>
-                    <span class="text-gray-500 text-sm">Part-time, Korea</span>
-                </li>
-                <li class="flex justify-between items-center border-b pb-2">
-                    <span>Marketing Specialist</span>
-                    <span class="text-gray-500 text-sm">Part-time, USA</span>
-                </li>
-                <li class="flex justify-between items-center">
-                    <span>Outbound Call Service</span>
-                    <span class="text-gray-500 text-sm">Full-time, UAE</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-    
 </x-app-layout>

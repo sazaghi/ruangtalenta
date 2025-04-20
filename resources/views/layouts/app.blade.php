@@ -1,49 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar Alpine.js</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</head>
-<body class="bg-[#D9D9D9] overflow-x-hidden">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+        <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <div x-data="{ open: true }" class="flex h-screen">
-        <div 
-            x-show="open" 
-            @click="open = false"
-            class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-            x-transition.opacity
-        ></div>
-        <!-- Sidebar -->
-        @if(auth()->user()->hasRole('perusahaan'))
-            @include('sidebarperusahaan')
-        @elseif(auth()->user()->hasRole('pencarikerja'))
-            @include('sidebarpencarikerja')
-        @endif
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    </head>
+    <body>
+        <div class="d-flex">
+            @include('layouts.sidebar')
 
+            <div class="flex-grow-1">
+                @include('layouts.navigation')
 
-        <!-- Kontainer utama -->
-        <div class="flex-1 min-h-screen transition-all duration-300" :class="open ? 'ml-64' : 'ml-20'">
-            <!-- Navbar -->
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header>
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+                @isset($header)
+                    <div class="container mt-4">
+                        <h2>{{ $header }}</h2>
                     </div>
-                </header>
-            @endisset
+                @endisset
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <main class="container mt-4">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
-    </div>
-
-</body>
+    </body>
 </html>

@@ -1,54 +1,136 @@
-    <div @click.away="open = false" :class="open ? 'w-64' : 'w-20'" class="bg-gray-200 text-white h-screen fixed p-5 transition-all duration-300 flex flex-col">
-            <button @click="open = !open" class="mb-5 p-2 rounded text-center">
-                <span x-show="!open" x-transition class="text-black">☰</span>
-            </button>
-            
-            <!-- Profile Section -->
-            <div class="mt-10 text-center">
-                <img src="https://cdn.discordapp.com/attachments/1039930696933843039/1353374542344491109/Screenshot_2025-03-23_204104.png?ex=67e16bc3&is=67e01a43&hm=5297112655e704855cea3a6fc2b1bf03c9d185ef1e10a9b18cda7897c4179e84&" class="rounded-full border-2 border-gray-300 mx-auto" :class="open ? 'w-20 h-20' : 'w-10 h-10'">
-                <template x-if="open" x-transition>
-                    <div>
-                        <h2 class="mt-2 font-semibold text-black">{{ Auth::user()->name }}</h2>
-                        <span class="text-xs text-green-400">● Online</span>
-                    </div>
-                </template>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-            <ul class="space-y-2 flex-1 mt-4">
-                <li class="flex items-center p-3 rounded-lg hover:bg-gray-400 cursor-pointer">
-                    <svg class="w-6 h-6 mr-3 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M9 21V3m5 18v-9m4 4v-5" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-black">Dashboard</span>
-                </li>
-                <li class="flex items-center p-3 rounded-lg hover:bg-gray-700 cursor-pointer">
-                    <svg class="w-6 h-6 mr-3 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-black">My Profile</span>
-                </li>
-                <li class="flex items-center p-3 rounded-lg hover:bg-gray-700 cursor-pointer">
-                    <svg class="w-6 h-6 mr-3 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m4 4H9m8-8H9" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-black">My Portofolio</span>
-                </li>
-                <li class="flex items-center p-3 rounded-lg hover:bg-gray-700 cursor-pointer">
-                    <svg class="w-6 h-6 mr-3 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m4 4H9m8-8H9" />
-                    </svg>
-                    <span x-show="open" x-transition class="text-black"><a href="/job/tracking-lamaran"> Tracking Lamaran</a></span>
-                </li>
-                <li class="flex items-center p-3 rounded-lg hover:bg-gray-700 cursor-pointer">
-                    <svg class="w-6 h-6 mr-3 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m4 4H9m8-8H9" />
-                    </svg>
-                    <span x-show="open" x-transition>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="text-black bg-transparent border-none cursor-pointer">Logout</button>
-                        </form>
-                    </span>
-                </li>
-            </ul>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #sidebar {
+            width: 80px;
+            transition: width 0.3s ease;
+            overflow: hidden;
+        }
+
+        #sidebar.expanded {
+            width: 250px;
+        }
+
+        #main-content {
+            margin-left: 33px;
+            transition: margin-left 0.3s ease;
+        }
+
+        #main-content.expanded {
+            margin-left: 205px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div id="sidebar" class="bg-light vh-100 position-fixed p-3 d-flex flex-column align-items-center">
+        <!-- Toggle Button -->
+        <button id="toggleSidebar" class="btn btn-outline-secondary w-100 mb-4">☰</button>
+
+        <!-- Profile -->
+        <div class="text-center w-100">
+            <img src="https://cdn.discordapp.com/attachments/1039930696933843039/1353374542344491109/Screenshot_2025-03-23_204104.png"
+                id="profileImage"
+                class="rounded-circle border border-secondary d-block mx-auto"
+                style="width: 40px; height: 40px; transition: all 0.3s;">
+            <div id="profileDetails" class="mt-2 text-center d-none">
+                <h6 class="mb-0 fs-6">Nama User</h6>
+                <span class="text-success small">● Online</span>
+            </div>
         </div>
+
+        <!-- Menu -->
+        <ul class="nav flex-column mt-4 w-100">
+            <li class="nav-item mb-2">
+                <a href="{{ route('dashboard') }}" class="nav-link text-dark d-flex align-items-center">
+                    <i class="bi bi-house-door me-2"></i>
+                    <span class="menu-label d-none">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ route('profile.edit') }}" class="nav-link text-dark d-flex align-items-center">
+                    <i class="bi bi-person me-2"></i>
+                    <span class="menu-label d-none">My Profile</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="#" class="nav-link text-dark d-flex align-items-center">
+                    <i class="bi bi-briefcase me-2"></i>
+                    <span class="menu-label d-none">My Portfolio</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ route('job.tracking') }}" class="nav-link text-dark d-flex align-items-center">
+                    <i class="bi bi-binoculars me-2"></i>
+                    <span class="menu-label d-none">Tracking Lamaran</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ route('job.tracking') }}" class="nav-link text-dark d-flex align-items-center">
+                    <i class="bi bi-door-closed me-2"></i>
+                    <span class="menu-label d-none">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="p-4 flex-grow-1">
+        <!-- Kosongin aja, nanti diisi dari blade pakai slot -->
+    </div>
+</div>
+
+<!-- Script -->
+<script>
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const mainContent = document.getElementById("main-content");
+
+    function toggleSidebar() {
+        const isExpanded = sidebar.classList.contains("expanded");
+
+        if (isExpanded) {
+            sidebar.classList.remove("expanded");
+            mainContent.classList.remove("expanded");
+
+            // Hide labels & profile
+            document.querySelectorAll(".menu-label, #profileDetails").forEach(el => {
+                el.classList.add("d-none");
+            });
+        } else {
+            sidebar.classList.add("expanded");
+            mainContent.classList.add("expanded");
+
+            // Show labels & profile
+            document.querySelectorAll(".menu-label, #profileDetails").forEach(el => {
+                el.classList.remove("d-none");
+            });
+        }
+    }
+
+    toggleBtn.addEventListener("click", toggleSidebar);
+    
+    document.addEventListener("click", (e) => {
+        const clickedInsideSidebar = sidebar.contains(e.target);
+        const clickedToggle = toggleBtn.contains(e.target);
+
+        if (!clickedInsideSidebar && !clickedToggle && sidebar.classList.contains("expanded")) {
+            toggleSidebar(true); // Force close
+        }
+    });
+</script>
+
+</body>
+</html>
