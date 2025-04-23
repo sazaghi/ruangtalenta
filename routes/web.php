@@ -13,6 +13,7 @@ use App\Http\Controllers\NotificationController;
 use App\Models\PostKerja;
 use App\Http\Controllers\PortofolioController;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\CourseController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +69,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/posting-lowongan', function () {
         return view('posting-lowongan');
     })->name('posting.lowongan');
+
+    Route::get('/courses', function () {
+        return view('courses');
+    });
 
 });
 
