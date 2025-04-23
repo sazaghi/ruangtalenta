@@ -12,7 +12,7 @@ use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\NotificationController;
 use App\Models\PostKerja;
 use App\Http\Controllers\PortofolioController;
-
+use App\Http\Controllers\JadwalController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +60,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/cv-upload', [PortofolioController::class, 'uploadCV'])->name('cv.upload');
     Route::post('/education-store', [PortofolioController::class, 'storeEducation'])->name('education.store');
 
+    Route::get('/save-candidates', function () {
+        return view('savecandidate');
+    });
+
+
+    Route::get('/posting-lowongan', function () {
+        return view('posting-lowongan');
+    })->name('posting.lowongan');
 
 });
 
@@ -68,8 +76,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/roles', [RoleController::class, 'index']);
 });
 
+Route::get('/jadwal', [JadwalController::class, 'index']);
 
 Route::get('/test-notification', [DashboardController::class, 'sendNotification'])->name('test.notification')->middleware('auth');
+
 
 
 require __DIR__.'/auth.php';
