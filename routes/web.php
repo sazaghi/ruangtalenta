@@ -70,8 +70,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('posting-lowongan');
     })->name('posting.lowongan');
 
-    Route::get('/courses', function () {
-        return view('courses');
+
+    Route::get('/newuserprofile', function () {
+        return view('newuserprofile');
     });
 
 });
@@ -84,6 +85,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::get('/jadwal', [JadwalController::class, 'index']);
 
 Route::get('/test-notification', [DashboardController::class, 'sendNotification'])->name('test.notification')->middleware('auth');
+
+Route::get('/navbar', function() {
+    return view('newsidebarpencarikerja');
+});
 
 
 
