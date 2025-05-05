@@ -167,6 +167,107 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /// Style untuk Card Education
+    .card-container {
+        background: #fff;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .add-btn {
+        background-color: #1a21d1;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 1rem;
+      }
+
+      .education-work-entry {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        align-items: flex-start;
+        border-bottom: 1px solid #f0f0f0;
+        padding-bottom: 1rem;
+      }
+
+      .year-badge {
+        background-color:#D9D9D9;
+        color: #1532B4;
+        font-weight: 600;
+        padding: 0.3rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+
+      .education-work-details {
+        flex-grow: 1;
+      }
+
+      .education-work-title {
+        font-size: 20px;
+        font-weight: 400;
+        display: flex;
+        align-items: center;
+      }
+
+      .university {
+        color: #f0a500;
+        font-weight: 400;
+        margin: 0.2rem 0 0.4rem;
+        font-size: 16px;
+      }
+
+      .work {
+        color: #1532B4;
+        font-weight: 400;
+        margin: 0.2rem 0 0.4rem;
+        font-size: 16px;
+      }
+
+      .description {
+        color: #888;
+        font-size: 16px;
+        line-height: 1.4;
+        max-width: 900px;
+      }
+
+      .delete-icon {
+        cursor: pointer;
+        font-size: 20px;
+        color: #4a5fd3;
+        margin-left: 26px;
+      }
+
+      @media (max-width: 600px) {
+        .education-work-entry {
+          flex-direction: column;
+        }
+
+        .education-work-title {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+      }
+    /// End style untuk Education
+
   </style>
 </head>
 <body>
@@ -224,32 +325,7 @@
             Save Change
           </button>          
       </div>
-
-      <div class="card">
-        <h3>Contact Information</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Country</label>
-            <input type="text" placeholder="Enter your country" />
-          </div>
-          <div class="form-group">
-            <label>City</label>
-            <input type="text" placeholder="Enter your city" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Complete Address</label>
-          <input type="text" placeholder="Enter your complete address" />
-        </div>
-        <button class="save-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24">
-              <path fill="currentColor" d="m8.6 22.5l-1.9-3.2l-3.6-.8l.35-3.7L1 12l2.45-2.8l-.35-3.7l3.6-.8l1.9-3.2L12 2.95l3.4-1.45l1.9 3.2l3.6.8l-.35 3.7L23 12l-2.45 2.8l.35 3.7l-3.6.8l-1.9 3.2l-3.4-1.45zm.85-2.55l2.55-1.1l2.6 1.1l1.4-2.4l2.75-.65l-.25-2.8l1.85-2.1l-1.85-2.15l.25-2.8l-2.75-.6l-1.45-2.4L12 5.15l-2.6-1.1L8 6.45l-2.75.6l.25 2.8L3.65 12l1.85 2.1l-.25 2.85l2.75.6zm1.5-4.4L16.6 9.9l-1.4-1.45l-4.25 4.25l-2.15-2.1L7.4 12z"/>
-            </svg>
-            Save Change
-        </button>          
-      </div>
     </div>
-
     <div>
       <div class="card">
         <h3 class="sn">Social Network</h3>
@@ -294,6 +370,115 @@
             </svg>
             Save Change
           </button>          
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Contact Information</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Country</label>
+        <input type="text" placeholder="Enter your country" />
+      </div>
+      <div class="form-group">
+        <label>City</label>
+        <input type="text" placeholder="Enter your city" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Complete Address</label>
+      <input type="text" placeholder="Enter your complete address" />
+    </div>
+    <button class="save-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24">
+          <path fill="currentColor" d="m8.6 22.5l-1.9-3.2l-3.6-.8l.35-3.7L1 12l2.45-2.8l-.35-3.7l3.6-.8l1.9-3.2L12 2.95l3.4-1.45l1.9 3.2l3.6.8l-.35 3.7L23 12l-2.45 2.8l.35 3.7l-3.6.8l-1.9 3.2l-3.4-1.45zm.85-2.55l2.55-1.1l2.6 1.1l1.4-2.4l2.75-.65l-.25-2.8l1.85-2.1l-1.85-2.15l.25-2.8l-2.75-.6l-1.45-2.4L12 5.15l-2.6-1.1L8 6.45l-2.75.6l.25 2.8L3.65 12l1.85 2.1l-.25 2.85l2.75.6zm1.5-4.4L16.6 9.9l-1.4-1.45l-4.25 4.25l-2.15-2.1L7.4 12z"/>
+        </svg>
+        Save Change
+    </button>          
+  </div>
+  <div class="card">
+    <div class="card-container">
+      <div class="card-header">
+        <h3>Education</h3>
+        <button class="add-btn">+ Add Education</button>
+      </div>
+      <div id="education-work-list">
+        <div class="education-work-entry">
+          <div class="year-badge">2012-2014</div>
+            <div class="education-work-details">
+              <div class="education-work-title">
+                <span>Computer Science</span>
+                <span class="delete-icon" onclick="this.closest('.education-work-entry').remove()">🗑</span>
+              </div>
+            <div class="university">Oxford University</div>
+            <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sem id enim suscipit commodo nec in ante. Sed viverra vel leo vitae pharetra. Morbi viverra venenatis neque, eu porttitor diam blandit.</div>
+          </div>
+        </div>
+        <div class="education-work-entry">
+          <div class="year-badge">2012-2014</div>
+            <div class="education-work-details">
+              <div class="education-work-title">
+                <span>Computer Science</span>
+                <span class="delete-icon" onclick="this.closest('.education-work-entry').remove()">🗑</span>
+              </div>
+            <div class="university">Oxford University</div>
+            <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sem id enim suscipit commodo nec in ante. Sed viverra vel leo vitae pharetra. Morbi viverra venenatis neque, eu porttitor diam blandit.</div>
+          </div>
+        </div>
+        <div class="education-work-entry">
+          <div class="year-badge">2012-2014</div>
+            <div class="education-work-details">
+              <div class="education-work-title">
+                <span>Computer Science</span>
+                <span class="delete-icon" onclick="this.closest('.education-work-entry').remove()">🗑</span>
+              </div>
+            <div class="university">Oxford University</div>
+            <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sem id enim suscipit commodo nec in ante. Sed viverra vel leo vitae pharetra. Morbi viverra venenatis neque, eu porttitor diam blandit.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-container">
+      <div class="card-header">
+        <h3>Work & Experience</h3>
+        <button class="add-btn">+ Add Work</button>
+      </div>
+      <div id="education-work-list">
+        <div class="education-work-entry">
+          <div class="year-badge">2012-2014</div>
+            <div class="education-work-details">
+              <div class="education-work-title">
+                <span>Product Designer</span>
+                <span class="delete-icon" onclick="this.closest('.education-work-entry').remove()">🗑</span>
+              </div>
+            <div class="work">Spotify Inc.</div>
+            <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sem id enim suscipit commodo nec in ante. Sed viverra vel leo vitae pharetra. Morbi viverra venenatis neque, eu porttitor diam blandit.</div>
+          </div>
+        </div>
+        <div class="education-work-entry">
+          <div class="year-badge">2012-2014</div>
+            <div class="education-work-details">
+              <div class="education-work-title">
+                <span>Product Designer</span>
+                <span class="delete-icon" onclick="this.closest('.education-work-entry').remove()">🗑</span>
+              </div>
+            <div class="work">Spotify Inc.</div>
+            <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sem id enim suscipit commodo nec in ante. Sed viverra vel leo vitae pharetra. Morbi viverra venenatis neque, eu porttitor diam blandit.</div>
+          </div>
+        </div>
+        <div class="education-work-entry">
+          <div class="year-badge">2012-2014</div>
+            <div class="education-work-details">
+              <div class="education-work-title">
+                <span>Product Designer</span>
+                <span class="delete-icon" onclick="this.closest('.education-work-entry').remove()">🗑</span>
+              </div>
+            <div class="work">Spotify Inc.</div>
+            <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sem id enim suscipit commodo nec in ante. Sed viverra vel leo vitae pharetra. Morbi viverra venenatis neque, eu porttitor diam blandit.</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

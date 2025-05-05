@@ -75,6 +75,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('newuserprofile');
     });
 
+    Route::get('/calendar', function() {
+    return view('calendar');
+});
+
 });
 
 // Route untuk Role Management
