@@ -77,6 +77,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/calendar', function() {
     return view('calendar');
+
 });
 
 });
@@ -92,6 +93,10 @@ Route::get('/test-notification', [DashboardController::class, 'sendNotification'
 
 Route::get('/navbar', function() {
     return view('newsidebarpencarikerja');
+});
+
+Route::get('/registerperusahaan', function() {
+    return view('newregisterperusahaan');
 });
 
 

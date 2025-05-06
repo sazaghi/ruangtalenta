@@ -122,7 +122,7 @@
       align-items: center;         /* pusat vertikal */
       justify-content: center;     /* pusat horizontal */
       gap: 6px;                    /* jarak antara ikon dan teks */
-}
+    }
 
     .skill-tags {
       display: flex;
@@ -268,6 +268,108 @@
       }
     /// End style untuk Education
 
+    /// Start style popup
+
+
+/* Modal Styling */
+.modal {
+  display: none;
+  position: absolute;
+  z-index: 9999;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  max-width: 900px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  width:900px;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 9999;
+}
+
+    .modal-content h3 {
+      margin-bottom: 40px;
+      font-size: 24px;
+      color: #111827;
+      font-weight: 400;
+    }
+
+    .form-group-modal {
+      margin-bottom: 25px;
+    }
+    .form-group-modal label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 400;
+      font-size: 16px;
+    }
+    .form-group-modal input,
+    .form-group-modal textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #000000;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+    .from-group-modal input::placeholder {
+        color: #A29D9D; /* Lebih gelap dan kontras */
+    }
+    .form-row-modal {
+      display: flex;
+      gap: 10px;
+    }
+    .form-row-modal .form-group-modal {
+      flex: 1;
+    }
+
+    input[type="date"]::-webkit-datetime-edit {
+      color: #A29D9D; /* abu-abu */
+    }
+
+
+.close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  font-size: 30px;
+  cursor: pointer;
+  
+}
+.add-button {
+  background-color: #3451f1;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9990;
+}
+
   </style>
 </head>
 <body>
@@ -369,7 +471,7 @@
               <path fill="currentColor" d="m8.6 22.5l-1.9-3.2l-3.6-.8l.35-3.7L1 12l2.45-2.8l-.35-3.7l3.6-.8l1.9-3.2L12 2.95l3.4-1.45l1.9 3.2l3.6.8l-.35 3.7L23 12l-2.45 2.8l.35 3.7l-3.6.8l-1.9 3.2l-3.4-1.45zm.85-2.55l2.55-1.1l2.6 1.1l1.4-2.4l2.75-.65l-.25-2.8l1.85-2.1l-1.85-2.15l.25-2.8l-2.75-.6l-1.45-2.4L12 5.15l-2.6-1.1L8 6.45l-2.75.6l.25 2.8L3.65 12l1.85 2.1l-.25 2.85l2.75.6zm1.5-4.4L16.6 9.9l-1.4-1.45l-4.25 4.25l-2.15-2.1L7.4 12z"/>
             </svg>
             Save Change
-          </button>          
+        </button>          
       </div>
     </div>
   </div>
@@ -400,7 +502,7 @@
     <div class="card-container">
       <div class="card-header">
         <h3>Education</h3>
-        <button class="add-btn">+ Add Education</button>
+        <button class="add-btn" id="openModal">+ Add Education</button>
       </div>
       <div id="education-work-list">
         <div class="education-work-entry">
@@ -437,6 +539,50 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <!-- Background Overlay -->
+  <div class="overlay" id="overlay"></div>
+  <!-- Modal Pop-up -->
+  <div class="modal" id="educationModal">
+    <div class="modal-content">
+      <span class="close" id="closeModal"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 20L4 4M20 4L4 20" stroke="#A29D9D" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Add Your Education</h3>
+      <form>
+        <div class="form-row-modal">
+          <div class="form-group-modal">
+            <label>School/University</label>
+            <input type="text" placeholder="University of Oxford" />
+          </div>
+          <div class="form-group-modal">
+            <label>Major</label>
+            <input type="text" placeholder="Computer Science" />
+          </div>
+        </div>
+        <div class="form-row-modal">
+          <div class="form-group-modal">
+            <label>From</label>
+            <input type="date" />
+          </div>
+          <div class="form-group-modal">
+            <label>To</label>
+            <input type="date" />
+          </div>
+        </div>
+        <div class="form-group-modal">
+          <label>Description</label>
+          <textarea rows="4"></textarea>
+        </div>
+        <button class="save-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24">
+            <path fill="currentColor" d="m8.6 22.5l-1.9-3.2l-3.6-.8l.35-3.7L1 12l2.45-2.8l-.35-3.7l3.6-.8l1.9-3.2L12 2.95l3.4-1.45l1.9 3.2l3.6.8l-.35 3.7L23 12l-2.45 2.8l.35 3.7l-3.6.8l-1.9 3.2l-3.4-1.45zm.85-2.55l2.55-1.1l2.6 1.1l1.4-2.4l2.75-.65l-.25-2.8l1.85-2.1l-1.85-2.15l.25-2.8l-2.75-.6l-1.45-2.4L12 5.15l-2.6-1.1L8 6.45l-2.75.6l.25 2.8L3.65 12l1.85 2.1l-.25 2.85l2.75.6zm1.5-4.4L16.6 9.9l-1.4-1.45l-4.25 4.25l-2.15-2.1L7.4 12z"/>
+          </svg>
+          Add
+        </button> 
+      </form>
     </div>
   </div>
   <div class="card">
@@ -482,5 +628,27 @@
       </div>
     </div>
   </div>
+  <script>
+    const modal = document.querySelector('.modal-content');
+    const overlay = document.querySelector('.overlay');
+    const openBtn = document.querySelector('.add-btn');
+    const closeBtn = document.querySelector('.close');
+  
+    openBtn.addEventListener('click', () => {
+      modal.style.display = 'block';
+      overlay.style.display = 'block';
+    });
+  
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+  
+    overlay.addEventListener('click', () => {
+      modal.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+  </script>
+    
 </body>
 </html>
