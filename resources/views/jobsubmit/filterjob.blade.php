@@ -1,130 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ruang Talenta</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .hero-section {
+      background: linear-gradient(90deg, #fcb045, #fd1d1d);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .filter-section {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+    }
+    .filter-button {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-weight: bold;
+      padding: 10px 0;
+      color: #000;
+    }
+    .filter-button:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .job-card {
+      transition: all 0.3s;
+    }
+    .job-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
+
 <body>
+
 @include('layouts.navigation')
-<div class="container mt-4">
-        {{-- Carousel / Banner --}}
-        <div class="mb-4">
-            <div class="p-5 bg-light rounded shadow-sm text-center">
-                <h2 class="fw-bold">Temukan Pekerjaan Impianmu di Sini!</h2>
-                <p class="text-muted">Cari pekerjaan sesuai keahlian dan minatmu di berbagai industri</p>
-                <img src="{{ asset('img/robot.png') }}" alt="banner" class="img-fluid" style="max-height: 200px;">
-            </div>
-        </div>
-
-        <div class="row">
-            {{-- Sidebar Filter --}}
-            <div class="col-md-3">
-                <h5 class="mb-3">Filter & Sorting</h5>
-
-                {{-- Lokasi --}}
-                <div class="mb-3">
-                    <label for="lokasi" class="form-label">Lokasi</label>
-                    <select class="form-select" id="lokasi" name="lokasi">
-                        <option selected>Kota/Provinsi</option>
-                        <option>Jakarta</option>
-                        <option>Bandung</option>
-                        <option>Surabaya</option>
-                        <!-- ... -->
-                    </select>
-                </div>
-
-                {{-- Industri --}}
-                <div class="mb-3">
-                    <label class="form-label">Industri</label>
-                    <div class="form-check"><input class="form-check-input" type="checkbox"> <label class="form-check-label">IT & Software</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox"> <label class="form-check-label">Manajemen & Bisnis</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox"> <label class="form-check-label">Keuangan</label></div>
-                    <!-- ... -->
-                </div>
-
-                {{-- Gaji --}}
-                <div class="mb-3">
-                    <label class="form-label">Gaji</label>
-                    <input type="range" class="form-range" min="1" max="10">
-                </div>
-            </div>
-
-            {{-- Job Listing --}}
-            <div class="col-md-9">
-                {{-- Search & Sort --}}
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="input-group" style="max-width: 400px;">
-                        <input type="text" class="form-control" placeholder="Masukkan kota, posisi...">
-                        <button class="btn btn-danger">Cari</button>
-                    </div>
-                    <div>
-                        <select class="form-select" style="max-width: 200px;">
-                            <option selected>Newest Post</option>
-                            <option>Oldest Post</option>
-                            <option>Highest Salary</option>
-                        </select>
-                    </div>
-                </div>
-
-                {{-- Job Cards --}}
-                <div class="row row-cols-1 row-cols-md-2 g-4">
-                    @foreach ($jobs as $job)
-                    <div class="col-md-4">
-                        <div class="card h-100 shadow-sm border">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <img src="https://via.placeholder.com/50" alt="Company Logo" class="rounded me-3">
-                                    <div>
-                                        <h5 class="mb-0">{{ $job->company_name }}</h5>
-                                        <small class="text-muted">{{ $job->location }}</small>
-                                    </div>
-                                </div>
-
-                                <p class="fw-semibold mb-1">{{ $job->title }}</p>
-                                <small class="text-muted">{{ $job->created_at->diffForHumans() }}</small>
-
-                                <div class="mt-2 d-flex flex-wrap gap-2">
-                                    <span class="badge bg-light text-dark">#PHP</span>
-                                    <span class="badge bg-light text-dark">#Laravel</span>
-                                </div>
-
-                                <p class="fw-bold fs-5 mt-3">Rp {{ number_format($job->salary, 0, ',', '.') }}</p>
-
-                                @if (auth()->check() && auth()->user()->hasRole('pencarikerja'))
-                                    <form action="{{ route('job.apply', $job->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary w-100 mt-3">Apply</button>
-                                    </form>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-                @if ($jobs->isEmpty())
-                    <p class="text-muted text-center">No job postings available.</p>
-                @endif
-                </div>
-            </div>
-        </div>
+<section class="text-white py-5 position-relative overflow-hidden" style="background-color: #fcb045; ">
+  <div class="container position-relative z-2">
+    <div class="row">
+      <div class="col-lg-8">
+        <h1 class="display-4 fw-bold mb-3">
+          Temukan Pekerjaan Impianmu di Sini!
+        </h1>
+        <p class="lead">
+          Cari pekerjaan sesuai keahlian dan minatmu di berbagai industri
+        </p>
+      </div>
     </div>
-@if(session('success'))
-    <script>
-        Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: '{{ session('success') }}',
-        confirmButtonColor: '#3085d6'
+  </div>
+</section>
+
+  <div class="container mt-4">
+    <form action="{{ route('job.filtering') }}" method="GET">
+      <div class="d-flex mb-4">
+        <input type="text" name="keyword" class="form-control me-2" placeholder="Cari posisi atau perusahaan..." value="{{ request()->get('keyword') }}">
+        <button type="submit" class="btn btn-danger me-2">Cari</button>
+        <select class="form-select" name="sort_by" style="max-width: 180px;">
+            <option value="default" {{ request()->get('sort_by') == 'default' ? 'selected' : '' }}>Sort by default</option>
+            <option value="newest" {{ request()->get('sort_by') == 'newest' ? 'selected' : '' }}>Sort by Newest</option>
+            <option value="oldest" {{ request()->get('sort_by') == 'oldest' ? 'selected' : '' }}>Sort by Oldest</option>
+            <option value="recommended" {{ request()->get('sort_by') == 'recommended' ? 'selected' : '' }}>Recommended for You</option>
+        </select>
+      </div>
+    </form>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="filter-section">
+          <div class='mb-4 fs-4 fw-bold'>Filter and Shorting</div>
+            <form action="{{ route('job.filtering') }}" method="GET">
+            {{-- Location --}}
+            <div class="mb-3">
+              <label class="form-label fw-bold">Location</label>
+              @if($locations->isNotEmpty())
+                <select class="form-select select2" name="location[]" multiple>
+                  @foreach($locations as $location)
+                    <option value="{{ $location }}" {{ collect(request('location'))->contains($location) ? 'selected' : '' }}>
+                      {{ $location }}
+                    </option>
+                  @endforeach
+                </select>
+              @else
+              <div class="form-control text-muted">Belum ada lokasi tersedia</div>
+              @endif
+            </div>
+            
+            {{-- Category --}}
+            <div class="mb-3">
+              <label class="form-label fw-bold">Category</label>
+              @if($categories->isNotEmpty())
+                <select class="form-select select2" name="categories[]" multiple>
+                  @foreach($categories as $categorie)
+                    <option value="{{ $categorie->id }}" {{ collect(request('categories'))->contains($categorie->id) ? 'selected' : '' }}>
+                      {{ $categorie->name }}
+                    </option>
+                  @endforeach
+                </select>
+              @else
+                <div class="form-control text-muted">Belum ada kategori tersedia</div>
+              @endif
+            </div>
+
+            {{-- Salary --}}
+            <div class="mb-3">
+              <label class="form-label fw-bold">Salary</label>
+              <div class="input-group mb-1">
+                <input type="number" name="salary_min" class="form-control" placeholder="Min" value="{{ request('salary_min') }}">
+                <input type="number" name="salary_max" class="form-control" placeholder="Max" value="{{ request('salary_max') }}">
+              </div>
+            </div>
+
+            {{-- Experience --}}
+            <div class="mb-3">
+              <label class="form-label fw-bold">Experience (Tahun)</label>
+              <div class="input-group mb-1">
+                <input type="number" name="experience_min" class="form-control" placeholder="Min" value="{{ request('experience_min') }}">
+                <input type="number" name="experience_max" class="form-control" placeholder="Max" value="{{ request('experience_max') }}">
+              </div>
+            </div>
+
+            {{-- Skills --}}
+            <div class="mb-3">
+              <label class="form-label fw-bold">Skills</label>
+              @if($skills->isNotEmpty())
+                <select class="form-select select2" name="skills[]" multiple>
+                  @foreach($skills as $skill)
+                    <option value="{{ $skill }}" {{ collect(request('skills'))->contains($skill) ? 'selected' : '' }}>
+                      {{ $skill }}
+                    </option>
+                  @endforeach
+                </select>
+              @else
+                <div class="form-control text-muted">Belum ada skill tersedia</div>
+              @endif
+            </div>
+          <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="row">
+        @foreach ($jobs as $job)
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm rounded-4 h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center">
+                  <img src="{{ asset('storage/' . $job->company->profile->avatar) }}" onerror="this.src='https://via.placeholder.com/40'" alt="Logo" width="40" class="me-2 rounded-circle">
+                  <div>
+                    <strong class="d-block">{{ $job->company->name }}</strong>
+                    <small class="text-muted">{{ $job->location }}</small>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                <small class="text-muted mb-3">{{ $job->created_at->diffForHumans() }}</small><br>
+                  @if ($job->category)
+                    <span class="badge bg-warning text-dark">{{ $job->category->name }}</span>
+                  @endif
+                
+                </div>
+              </div>
+
+              <h5 class="fw-bold">
+                <a href="{{ route('job.detail', $job->id) }}" class="text-dark text-decoration-none">{{ $job->title }}</a>
+              </h5>
+
+              <div class="d-flex flex-wrap gap-2 mt-3 mb-3">
+                @foreach ($job->skills as $skill)
+                  <span class="badge bg-primary">{{ $skill }}</span>
+                @endforeach
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <strong>Rp {{ number_format($job->salary_min, 0, ',', '.') }} - Rp {{ number_format($job->salary_max, 0, ',', '.') }}</strong>
+
+                @if (auth()->check() && auth()->user()->hasRole('pencarikerja'))
+                  <form action="{{ route('job.apply', $job->id) }}" method="POST" class="mb-0">
+                    @csrf
+                    <button type="submit" class="btn btn-primary btn-sm px-3">Apply</button>
+                  </form>
+                @endif
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @endforeach
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('.select2').select2({
+      width: '100%',
+      placeholder: 'Pilih opsi',
+      allowClear: true,
+      dropdownParent: $('body')
     });
-    </script>
- @endif
+  });
+</script>
+
 </body>
 </html>

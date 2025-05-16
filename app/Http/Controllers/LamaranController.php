@@ -6,6 +6,8 @@ use App\Models\Lamaran;
 use App\Models\PostKerja;
 use App\Models\Interview;
 use App\Models\Bio;
+use App\Models\SelectionTemplate;
+use App\Models\SelectionStage;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,7 +56,7 @@ class LamaranController extends Controller
         $score = $this->calculateSimilarity($userSkills, $jobSkills);
 
         // Simpan aplikasi
-        Lamaran::create([
+        $lamaran = Lamaran::create([
             'user_id' => $user->id,
             'post_kerjas_id' => $job->id,
             'status' => 'pending',
@@ -95,4 +97,63 @@ class LamaranController extends Controller
 
         return redirect()->back()->with('error', 'Lamaran tidak ditemukan.');
     }
+    
+    public function shortlistApplicants(Request $request)
+    {
+        $postKerjasId = $request->input('post_kerjas_id');
+        $selectedIds = $request->input('lamaran_ids', []); // ambil ID dari checkbox
+
+        if (empty($selectedIds)) {
+            return back()->with('error', 'Pilih minimal satu kandidat terlebih dahulu.');
+        }
+
+        $selectedLamarans = Lamaran::with('user')
+            ->whereIn('id', $selectedIds)
+            ->where('post_kerjas_id', $postKerjasId)
+            ->get();
+
+        foreach ($selectedLamarans as $lamaran) {
+            $lamaran->update(['status' => 'on_screening']);
+
+            $templates = SelectionTemplate::where('post_kerjas_id', $lamaran->post_kerjas_id)
+                            ->orderBy('stage_order')->get();
+
+            $firstStage = null;
+            foreach ($templates as $index => $template) {
+                $stage = SelectionStage::create([
+                    'lamarans_id' => $lamaran->id,
+                    'stage_name' => $template->stage_name,
+                    'status' => 'Pending',
+                    'order_index' => $index + 1,
+                ]);
+
+                if ($index === 0) {
+                    $firstStage = $stage;
+                }
+            }
+
+            if ($firstStage) {
+                $lamaran->current_stage_id = $firstStage->id;
+                $lamaran->save();
+            }
+        }
+
+        return back()->with('success', 'Kandidat berhasil dimasukkan ke shortlist.');
+    }
+    
+    public function finalize(Request $request, int $id)
+    {
+        $request->validate([
+            'status' => 'required|string|max:255',
+        ]);
+
+        $lamaran = Lamaran::findOrFail($id);
+
+        $lamaran->status = $request->input('status');
+        $lamaran->save();
+
+        return redirect()->back()->with('success', 'Status lamaran berhasil diperbarui.');
+    }
+
+
 }

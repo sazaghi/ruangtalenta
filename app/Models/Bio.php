@@ -22,7 +22,16 @@ class Bio extends Model
         'instagram',
         'avatar',
         'skills',
+        'country', 
+        'city', 
+        'complete_address',
+        'education',
+        'work_experience'
     ];
+    protected $casts = [
+        'skills' => 'array',
+    ];
+    
     
     public function user()
     {
@@ -41,6 +50,9 @@ class Bio extends Model
             'twitter',
             'instagram',
             'avatar',
+            'country', 
+            'city', 
+            'complete_address'
         ];
 
         $filled = 0;
@@ -51,6 +63,10 @@ class Bio extends Model
         }
 
         return round(($filled / count($fields)) * 100);
+    }
+    public function getSkillsAttribute($value)
+    {
+        return json_decode($value, true) ?? [];
     }
 
     

@@ -41,15 +41,19 @@
 
         <!-- Profile -->
         <div class="text-center w-100">
-            <img src="https://cdn.discordapp.com/attachments/1039930696933843039/1353374542344491109/Screenshot_2025-03-23_204104.png"
+            <img src="{{ auth()->user()->profile && auth()->user()->profile->avatar 
+                ? Storage::url(auth()->user()->profile->avatar) 
+                : asset('images/default-avatar.png') }}" 
                 id="profileImage"
                 class="rounded-circle border border-secondary d-block mx-auto"
                 style="width: 40px; height: 40px; transition: all 0.3s;">
+
             <div id="profileDetails" class="mt-2 text-center d-none">
-                <h6 class="mb-0 fs-6">nanti</h6>
+                <h6 class="mb-0 fs-6">{{ Auth::user()->name }}</h6>
                 <span class="text-success small">● Online</span>
             </div>
         </div>
+
 
         <!-- Menu -->
         <ul class="nav flex-column mt-4 w-100">

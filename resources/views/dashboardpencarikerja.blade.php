@@ -33,24 +33,24 @@
 
                         <!-- Bagian kanan (circular progress) -->
                         <div class="text-center">
-    <svg width="100" height="100">
-        <!-- Background circle -->
-        <circle cx="50" cy="50" r="{{ $radius }}" stroke="#eee" stroke-width="10" fill="none"/>
+                            <svg width="100" height="100">
+                                <!-- Background circle -->
+                                <circle cx="50" cy="50" r="{{ $radius }}" stroke="#eee" stroke-width="10" fill="none"/>
 
-        <!-- Foreground progress circle -->
-        <circle cx="50" cy="50" r="{{ $radius }}" stroke="#ffc107" stroke-width="10" fill="none"
-                stroke-dasharray="{{ $circumference }}"
-                stroke-dashoffset="{{ $offset }}"
-                stroke-linecap="round"
-                transform="rotate(-90 50 50)" />
+                                <!-- Foreground progress circle -->
+                                <circle cx="50" cy="50" r="{{ $radius }}" stroke="#ffc107" stroke-width="10" fill="none"
+                                        stroke-dasharray="{{ $circumference }}"
+                                        stroke-dashoffset="{{ $offset }}"
+                                        stroke-linecap="round"
+                                        transform="rotate(-90 50 50)" />
 
-        <!-- Text percentage -->
-        <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="18">
-            {{ $profileCompletion }}%
-        </text>
-    </svg>
-    <small class="text-muted d-block">Profile Complete</small>
-</div>
+                                <!-- Text percentage -->
+                                <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="18">
+                                    {{ $profileCompletion }}%
+                                </text>
+                            </svg>
+                        <small class="text-muted d-block">Profile Complete</small>
+                    </div>
 
                     </div>
                 </div>

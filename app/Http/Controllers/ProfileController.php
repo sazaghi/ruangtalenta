@@ -17,7 +17,30 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $bio = Bio::where('user_id', auth()->id())->first();
         return view('profile.edit', [
+            'user' => $request->user(),
+            'bio' => $bio,
+        ]);        
+    }
+
+    /**
+     * Update the user's profile information.
+     */
+    public function update(ProfileUpdateRequest $request)
+    {
+        $user = auth()->user();
+
+        // Simpan email ke User
+        $user->email = $request->email;
+        $user->save();
+
+        return redirect()->route('profile.edit')->with('success', 'Profile updated successfully.');
+    }
+
+    public function settingEdit(Request $request): View
+    {
+        return view('profile.usersetting', [
             'user' => $request->user(),
         ]);
     }
@@ -25,16 +48,25 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request)
-{
-    $user = auth()->user();
+    public function settingUpdate(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $user = $request->user();
 
-    // Simpan email ke User
-    $user->email = $request->email;
-    $user->save();
+        $user->fill($request->validated());
 
-    return redirect()->route('profile.edit')->with('success', 'Profile updated successfully.');
-}
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $path;
+        }
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('setting.edit')->with('status', 'profile-updated');
+    }
 
 
     /**

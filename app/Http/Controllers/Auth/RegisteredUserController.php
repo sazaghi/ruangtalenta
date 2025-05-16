@@ -49,4 +49,8 @@ class RegisteredUserController extends Controller
 
         return redirect(route('dashboard', absolute: false));
     }
+    public function perusahaanregister(): View
+    {
+        return view('auth.registerCompany');
+    }
 }

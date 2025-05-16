@@ -3,18 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Post extends Model
 {
-    public function forum() {
-        return $this->belongsTo(Forum::class);
-    }
+    use HasFactory;
 
-    public function user() {
+    protected $fillable = ['user_id', 'title', 'content', 'parent_id'];
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function comments() {
-        return $this->hasMany(Comment::class);
+    public function parent()
+    {
+        return $this->belongsTo(Post::class, 'parent_id');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Post::class, 'parent_id')->with('replies');
     }
 }

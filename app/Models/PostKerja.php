@@ -14,12 +14,14 @@ class PostKerja extends Model
         'description',
         'user_id',
         'location',
-        'salary',
+        'salary_min', 
+        'salary_max',
         'selection_methods',
         'experience',
         'job_type',
         'skills',
-        'deadline'
+        'deadline',
+        'category_id'
     ];
 
     protected $casts = [
@@ -53,5 +55,13 @@ class PostKerja extends Model
     public function selectionSteps()
     {
         return $this->hasMany(JobSelectionStep::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function selectionTemplates()
+    {
+        return $this->hasMany(SelectionTemplate::class, 'post_kerjas_id');
     }
 }

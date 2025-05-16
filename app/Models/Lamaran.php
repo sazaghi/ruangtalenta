@@ -28,6 +28,13 @@ class Lamaran extends Model
                 && $interview->post_kerjas_id === $this->post_kerjas_id;
         });
     }
-
+    public function stages()
+    {
+        return $this->belongsTo(SelectionStage::class, 'current_stage_id');
+    }
+    public function currentStage()
+    {
+        return $this->belongsTo(SelectionTemplate::class, 'current_stage_id');
+    }
 
 }

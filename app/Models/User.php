@@ -50,4 +50,17 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Bio::class);
     }
+    public function uploads()
+    {
+        return $this->hasMany(UserUpload::class);
+    }
+    public function educations()
+    {
+        return $this->hasMany(Education::class);
+    }
+    public function workExperiences()
+    {
+        return $this->hasMany(WorkExperience::class);
+    }
+
 }

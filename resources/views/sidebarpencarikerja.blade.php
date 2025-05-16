@@ -41,12 +41,15 @@
 
         <!-- Profile -->
         <div class="text-center w-100">
-            <img src="https://cdn.discordapp.com/attachments/1039930696933843039/1353374542344491109/Screenshot_2025-03-23_204104.png"
+            <img src="{{ auth()->user()->profile && auth()->user()->profile->avatar 
+                ? Storage::url(auth()->user()->profile->avatar) 
+                : asset('images/default-avatar.png') }}" 
                 id="profileImage"
                 class="rounded-circle border border-secondary d-block mx-auto"
                 style="width: 40px; height: 40px; transition: all 0.3s;">
+
             <div id="profileDetails" class="mt-2 text-center d-none">
-                <h6 class="mb-0 fs-6">Nama User</h6>
+                <h6 class="mb-0 fs-6">{{ Auth::user()->name }}</h6>
                 <span class="text-success small">● Online</span>
             </div>
         </div>
@@ -66,9 +69,16 @@
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="#" class="nav-link text-dark d-flex align-items-center">
-                    <i class="bi bi-briefcase me-2"></i>
-                    <span class="menu-label d-none">My Portfolio</span>
+                <a href="{{ route('user_uploads.index') }}" class="nav-link text-dark d-flex align-items-center">
+                    <i class="bi bi-upload me-2"></i>
+                    <span class="menu-label d-none">upload</span>
+                </a>
+            </li>
+
+            <li class="nav-item mb-2">
+                <a href="{{ route('calendar.user') }}" class="nav-link text-dark d-flex align-items-center">
+                    <i class="bi bi-calendar me-2"></i>
+                    <span class="menu-label d-none">Calendar</span>
                 </a>
             </li>
             <li class="nav-item mb-2">

@@ -6,18 +6,23 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class SelectionMethodSeeder extends Seeder
+use App\Models\Category;
+
+class CategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        DB::table('selection_methods')->insert([
-            ['name' => 'CV'],
-            ['name' => 'Aplications letter'],
-            ['name' => 'Interview'],
-            ['name' => 'Test'],
-        ]);
+        $categories = [
+            'IT & Software', 
+            'Finance', 
+            'Marketing', 
+            'Management & Business', 
+            'Education', 
+            'Design & Creativity'
+        ];
+
+        foreach ($categories as $name) {
+            Category::create(['name' => $name]);
+        }
     }
 }

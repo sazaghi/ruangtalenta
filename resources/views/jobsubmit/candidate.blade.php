@@ -1,3 +1,4 @@
+{{-- resources/views/job/candidates.blade.php --}}
 @php
     $selectedJob = null;
     if(request('job_id')) {
@@ -11,38 +12,30 @@
 <x-app-layout>
     <style>
         .table-container {
-      background-color: #fff;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.05);
-      }
-      .table-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #ddd;
-      margin-right: 10px;
-      }
-      .subtext {
-      font-size: 0.75rem;
-      color: #6c757d;
-      }
-      .action-icons i {
-      cursor: pointer;
-      margin-right: 8px;
-      color: #6c757d;
-      }
-      .action-icons i:hover {
-      color: #0d6efd;
-      }
-      .search-bar {
-      border-radius: 20px;
-      padding-left: 30px;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/49/49116.png');
-      background-size: 16px;
-      background-position: 10px center;
-      background-repeat: no-repeat;
-      }
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+        .table-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-right: 10px;
+        }
+        .action-icons i {
+            cursor: pointer;
+            margin-right: 8px;
+            color: #6c757d;
+        }
+        .action-icons i:hover {
+            color: #0d6efd;
+        }
+        .nav-tabs .nav-link.active {
+            border-bottom: 2px solid #6f42c1;
+            font-weight: bold;
+        }
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -64,10 +57,7 @@
         </div>
     </x-slot>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div style="max-width: 300px;">
-            <input type="text" class="form-control search-bar" placeholder="Search">
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <form method="GET" action="{{ route('job.candidate') }}" style="max-width: 300px;">
             <select name="job_id" class="form-select" onchange="this.form.submit()">
                 <option value="">Pilih Job</option>
@@ -78,108 +68,161 @@
                 @endforeach
             </select>
         </form>
-    </div>
 
-    <div class="table-container">
-        @if ($selectedJob)
-            @if ($selectedJob->lamarans->isEmpty())
-                <p class="text-muted">Belum ada pelamar untuk lowongan <strong>{{ $selectedJob->title }}</strong>.</p>
-            @else
-                <table class="table align-middle">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>Tag</th>
-                            <th>Score</th>
-                            <th>Aksi</th>
-                            <th>Select</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($selectedJob->lamarans as $lamaran)
-                            @php
-                                $user = $lamaran->user;
-                                $interview = $interviews[$user->id] ?? null;
-                            @endphp
-                            <tr>
-                                <td><div class="table-avatar"></div></td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="fw-semibold">{{ $user->name }}</div>
-                                    </div>
-                                </td>
-                                <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
-                                <td>
-                                    <span class="badge bg-dark text-white">#PHP</span>
-                                    <span class="badge bg-dark text-white">#Laravel</span>
-                                </td>
-                                <td><strong>{{ $lamaran->score }}</strong></td>
-                                <td class="action-icons">
-                                    <i class="bi bi-eye" title="Lihat"
-                                       onclick="showApplicantProfile(`{{ $user->name }}`, `{{ $user->email }}`, `{{ $lamaran->skor ?? 0 }}`, '-', '-', '-', '-')"></i>
+        <div class="d-flex align-items-center gap-2">
+            <button type="submit" form="shortlist-form" class="btn btn-primary">+ Add to Short List</button>
+            <a href="?tab=shortlist&job_id={{ request('job_id') }}" class="btn btn-outline-primary">View Short List</a>
 
-                                    @if ($canInterview or $canTest)
-                                    <i class="bi bi-calendar-event" title="Undang Interview"
-                                        onclick="openInterviewModal({{ $user->id }})"></i>
-
-                                    @endif
-
-                                    <i class="bi bi-x-circle" title="Tolak Lamaran"
-                                       onclick="openRejectModal({{ $user->id }})"></i>
-                                </td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Hasil Interview
-                                        </button>
-                                        <ul class="dropdown-menu p-3" style="min-width: 300px; max-height: 300px; overflow-y: auto;">
-                                        @if ($interviews->has($user->id))
-                                            <h6>Interview Sebelumnya:</h6>
-                                            @foreach ($interviews->get($user->id) as $iv)
-                                                <div class="border rounded p-2 mb-2 bg-light">
-                                                    <p><strong>Jadwal Interview:</strong> {{ \Carbon\Carbon::parse($iv->jadwal)->translatedFormat('l, d M Y H:i') }}</p>
-                                                    <p><strong>Link Interview:</strong> 
-                                                        @if ($iv->link)
-                                                            <a href="{{ $iv->link }}" target="_blank">{{ $iv->link }}</a>
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </p>
-                                                    <p><strong>Metode:</strong> {{ $iv->metode }}</p>
-                                                    <p><strong>Result:</strong> {{ $iv->result_note }}</p>
-                                                    <form action="{{ route('interview.update.note', $iv->id) }}" method="POST" class="mt-1">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="d-flex justify-content-between">
-                                                            <button type="submit" class="btn btn-sm btn-fail">Tolak</button>
-                                                            <button type="submit" name="status" value="Lolos Seleksi {{$iv->tipe}}" class="btn btn-sm btn-primary">Diterima</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            @endforeach
-                                            <hr>
-                                        @else
-                                            <p>Belum ada interview sebelumnya.</p>
-                                        @endif
-                                        </ul>
-                                    </div>
-                                </td>
-
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
-        @else
-            <p class="text-muted">Silakan pilih lowongan terlebih dahulu.</p>
-        @endif
+            <div class="ms-3">
+                <label>Sort by:</label>
+                <select class="form-select d-inline w-auto">
+                    <option>Newest</option>
+                    <option>Oldest</option>
+                    <option>Highest Score</option>
+                </select>
+            </div>
+        </div>
     </div>
 
     @if ($selectedJob)
+        @php
+            $activeTab = request('tab', 'pending');
+            $lamarans = $selectedJob->lamarans;
+        @endphp
+
+        <ul class="nav nav-tabs mb-3" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link {{ $activeTab === 'pending' ? 'active' : '' }}"
+                   href="?tab=pending&job_id={{ $selectedJob->id }}">Pending <span class="badge bg-secondary">{{ $pendingCount }}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ $activeTab === 'accepted' ? 'active' : '' }}"
+                   href="?tab=accepted&job_id={{ $selectedJob->id }}">Accepted <span class="badge bg-secondary">{{ $acceptedCount }}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ $activeTab === 'rejected' ? 'active' : '' }}"
+                   href="?tab=rejected&job_id={{ $selectedJob->id }}">Rejected <span class="badge bg-secondary">{{ $rejectedCount }}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ $activeTab === 'shortlist' ? 'active' : '' }}"
+                   href="?tab=shortlist&job_id={{ $selectedJob->id }}">Shortlist <span class="badge bg-secondary">{{ $shortlistCount }}</span></a>
+            </li>
+        </ul>
+
+        <div class="table-container">
+            @php
+                $filtered = match($activeTab) {
+                    'pending' => $lamarans->where('status', 'pending'),
+                    'accepted' => $lamarans->where('status', 'Accepted'),
+                    'rejected' => $lamarans->where('status', 'Rejected'),
+                    'shortlist' => $lamarans->filter(function($lamaran) {
+                        return !in_array(strtolower($lamaran->status), ['pending', 'accepted', 'rejected']);
+                    }),
+                    default => $lamarans,
+                };
+            @endphp
+                
+            @if ($filtered->isEmpty())
+                <p class="text-muted">Tidak ada kandidat untuk tab ini.</p>
+            @else
+                @if($activeTab == 'pending')
+                    <form id="shortlist-form" method="POST" action="{{ route('shortlist.run') }}">
+                    @csrf
+                        <input type="hidden" name="post_kerjas_id" value="{{ $selectedJob?->id }}">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>Waktu Apply</th>
+                                    <th>Score</th>
+                                    <th>Aksi</th>
+                                    @if($activeTab == 'pending')
+                                        <th>Select</th>
+                                    @endif
+                                    @if($activeTab == 'shortlist')
+                                        <th>Finalize</th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($filtered as $lamaran)
+                                    @php
+                                        $user = $lamaran->user;
+                                    @endphp
+                                    <tr>
+                                        <td><div class="table-avatar"></div></td>
+                                        <td>{{ $user->name }}</td>
+                                        <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
+                                        <td>{{ $lamaran->created_at->format('d M Y') }}</td>
+                                        <td><strong>{{ $lamaran->score }}</strong></td>
+                                        <td><i class="bi bi-eye" title="Lihat"
+                                        onclick="showApplicantProfile(`{{ $user->name }}`, `{{ $user->email }}`, `{{ $lamaran->skor ?? 0 }}`, '-', '-', '-', '-')"></i></td>
+                                        <td><input type="checkbox" name="lamaran_ids[]" value="{{ $lamaran->id }}"></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </form>
+                @else
+                    <input type="hidden" name="post_kerjas_id" value="{{ $selectedJob?->id }}">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Waktu Apply</th>
+                                <th>Score</th>
+                                <th>Aksi</th>
+                                @if($activeTab == 'pending')
+                                    <th>Select</th>
+                                @endif
+                                @if($activeTab == 'shortlist')
+                                    <th>Finalize</th>
+                                @endif
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($filtered as $lamaran)
+                                @php
+                                    $user = $lamaran->user;
+                                @endphp
+                                <tr>
+                                    <td><div class="table-avatar"></div></td>
+                                    <td>{{ $user->name }}</td>
+                                    <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
+                                    <td>{{ $lamaran->created_at->format('d M Y') }}</td>
+                                    <td><strong>{{ $lamaran->score }}</strong></td>
+                                    <td class="action-icons">
+                                        <i class="bi bi-eye" title="Lihat"
+                                       onclick="showApplicantProfile(`{{ $user->name }}`, `{{ $user->email }}`, `{{ $lamaran->skor ?? 0 }}`, '-', '-', '-', '-')"></i>
+                                            @if ($canInterview or $canTest)
+                                            <i class="bi bi-calendar-event" title="Undang Interview"
+                                                onclick="openInterviewModal({{ $user->id }})"></i>
+                                            @endif
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('lamaran.finalize', $lamaran->id) }}" method="POST" class="mt-2">
+                                            @csrf
+                                            <button type="submit" name="status" value="Rejected" class="btn btn-sm btn-danger">TEs Bro</button>
+                                            <button type="submit" name="status" value="Accepted" class="btn btn-sm btn-success">Diterima</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif    
+            @endif
+        </div>
+    @else
+    <p class="text-muted">Pilih Lowongan terlebih dahulu</p>
+    @endif
+    @if ($selectedJob)
     {{-- Modal Interview --}}
-        @foreach($selectedJob->lamarans as $lamaran)
+        @foreach($lamarans as $lamaran)
             @php
                 $user = $lamaran->user;
                 $interview = $interviews[$user->id] ?? null;
@@ -192,7 +235,7 @@
                         <input type="hidden" name="job_id" value="{{ $selectedJob->id }}">
 
                         <div class="modal-header">
-                            <h5 class="modal-title">Undangan Interview untuk {{ $user->name }}</h5>
+                            <h5 class="modal-title">Undangan untuk {{ $user->name }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
 
@@ -215,8 +258,17 @@
                             @endforeach
                             <hr>
                         @else
-                            <p>Belum ada interview sebelumnya.</p>
+                            <p>Belum ada undangan sebelumnya.</p>
                         @endif
+                            <div class="mb-3">
+                                <label class="form-label">Tahap Seleksi</label>
+                                <select name="selection_template_id" class="form-control" required>
+                                    <option value="" disabled selected>Pilih tipe seleksi</option>
+                                    @foreach ($selectiontemplate as $option)
+                                        <option value="{{ $option->id }}">{{ $option->stage_name }}</option> <!-- Fixed the echo syntax here -->
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label class="form-label">Judul</label>
                                 <input type="text" name="judul" class="form-control" placeholder="Contoh: Interview Tahap 1">
@@ -252,34 +304,6 @@
             </div>
         @endforeach
     @endif
-    {{-- Modal Tolak --}}
-    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-              <form action="{{ route('application.reject') }}" method="POST" class="modal-content">
-                  @csrf
-                  @method('POST')
-                  <input type="hidden" name="user_id" id="rejectUserId">
-                  @if ($selectedJob)
-                      <input type="hidden" name="job_id" value="{{ $selectedJob->id }}">
-                  @endif
-                  <div class="modal-header">
-                      <h5 class="modal-title">Tolak Lamaran</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                  </div>
-                  <div class="modal-body">
-                      <p>Apakah kamu yakin ingin menolak lamaran ini?</p>
-                      <div class="mb-3">
-                          <label class="form-label">Pesan Penolakan (Opsional)</label>
-                          <textarea name="message" class="form-control" rows="3" placeholder="Opsional"></textarea>
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                      <button class="btn btn-danger" type="submit">Tolak Lamaran</button>
-                  </div>
-              </form>
-          </div>
-      </div>
-
     {{-- Modal Profil Pelamar --}}
     <div class="modal fade" id="viewApplicantModal" tabindex="-1" aria-labelledby="viewApplicantModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
@@ -309,7 +333,6 @@
               </div>
           </div>
       </div>
-
     <script>
         function showApplicantProfile(name, email, score, tags, address, phone, description) {
             document.getElementById('modalUserName').innerText = name;
@@ -334,18 +357,6 @@
                 // Jika modal tidak ditemukan, tunjukkan pesan kesalahan (debugging)
                 console.error('Modal untuk user dengan ID ' + userId + ' tidak ditemukan.');
             }
-        }
-
-
-
-        function openTestModal(userId) {
-            document.getElementById('testUserId').value = userId;
-            new bootstrap.Modal(document.getElementById('testModal')).show();
-        }
-
-        function openRejectModal(userId) {
-            document.getElementById('rejectUserId').value = userId;
-            new bootstrap.Modal(document.getElementById('rejectModal')).show();
         }
     </script>
 </x-app-layout>

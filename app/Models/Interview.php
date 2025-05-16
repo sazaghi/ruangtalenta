@@ -19,6 +19,7 @@ class Interview extends Model
         'notes',
         'status',
         'result_note',
+        'selection_template_id'
 
     ];
 
@@ -31,4 +32,9 @@ class Interview extends Model
     {
         return $this->belongsTo(PostKerja::class, 'post_kerjas_id');
     }
+    public function selectionTemplate()
+    {
+        return $this->belongsTo(SelectionTemplate::class);
+    }
+
 }

@@ -20,13 +20,17 @@ class BioController extends Controller
             'twitter' => 'nullable|string|max:255',
             'instagram' => 'nullable|string|max:255',
             'avatar' => 'nullable|image|max:2048',
-            'skills' => 'nullable|string', // tambah validasi ini
+            'skills' => 'nullable|string',
+            'country' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'complete_address' => 'nullable|string',
+            'education' => 'nullable|string',
+            'work_experience' => 'nullable|string',
         ]);
 
         // Ubah skills ke array lalu encode ke JSON
         if ($request->filled('skills')) {
-            $skillsArray = array_map('trim', explode(',', $request->skills));
-            $validated['skills'] = json_encode($skillsArray);
+            $validated['skills'] = $request->skills;
         }
 
         // Proses upload avatar
@@ -37,9 +41,38 @@ class BioController extends Controller
 
         $validated['user_id'] = auth()->id();
 
-        Bio::create($validated);
+        // Cek jika user sudah memiliki bio, lakukan update, jika belum buat baru
+        $bio = Bio::updateOrCreate(
+            ['user_id' => auth()->id()], // kondisi pencarian, berdasarkan user_id
+            $validated // data yang akan di-update atau disimpan
+        );
 
         return redirect()->back()->with('success', 'Bio berhasil disimpan!');
+    }
+    public function edit()
+    {
+        $bio = Bio::where('user_id', auth()->id())->first();
+
+        return view('profile.edit', compact('bio'));
+    }
+    
+    public function storeEducation(Request $request)
+    {
+        $data = $request->validate([
+            'year' => 'required|string',
+            'major' => 'required|string',
+            'university' => 'required|string',
+            'description' => 'nullable|string',
+        ]);
+
+        $bio = Bio::firstOrCreate(['user_id' => auth()->id()]);
+
+        $education = $bio->education ?? [];
+        $education[] = $data;
+
+        $bio->update(['education' => $education]);
+
+        return redirect()->back()->with('success', 'Education added successfully.');
     }
 
 }
