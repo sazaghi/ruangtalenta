@@ -71,7 +71,7 @@
             <li class="nav-item mb-2">
                 <a href="{{ route('user_uploads.index') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-upload me-2"></i>
-                    <span class="menu-label d-none">upload</span>
+                    <span class="menu-label d-none">upload Summary</span>
                 </a>
             </li>
 

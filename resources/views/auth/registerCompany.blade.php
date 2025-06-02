@@ -170,29 +170,49 @@ form button {
     </section>
     <section class="right">
       <h2>Ruang Talenta</h2>
-      <form>
+      @if ($errors->any())
+        <div style="color: red; margin-bottom: 20px;">
+          <ul style="list-style: none; padding-left: 0;">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
+
+      @if (session('success'))
+        <div style="color: green; margin-bottom: 20px;">
+          {{ session('success') }}
+        </div>
+      @endif
+      <form method="POST" action="{{ route('register.perusahaan') }}">
+        @csrf
         <div class="input-group">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" viewBox="0 0 24 24" style="margin-right: 10px;">
             <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
           </svg>
-          <input type="text" placeholder="Full name" required>
+          <input type="text" name="name" placeholder="Full name" required>
         </div>
+
         <div class="input-group">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" viewBox="0 0 24 24" style="margin-right: 10px;">
             <path d="M12 13.065 1.5 6.75V18a1.5 1.5 0 0 0 1.5 1.5h18a1.5 1.5 0 0 0 1.5-1.5V6.75L12 13.065zM12 11 22.5 4.5h-21L12 11z"/>
           </svg>
-          <input type="email" placeholder="Email" required>
+          <input type="email" name="email" placeholder="Email" required>
         </div>
+
         <div class="input-group">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" viewBox="0 0 24 24" style="margin-right: 10px;">
             <path d="M6.62 10.79a15.053 15.053 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24a11.72 11.72 0 0 0 3.69.59c.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C9.39 21.25 2.75 14.61 2.75 6c0-.55.45-1 1-1H7.5c.55 0 1 .45 1 1 0 1.28.21 2.52.59 3.69.11.35.03.75-.24 1.02l-2.23 2.08z"/>
           </svg>
-          <input type="text" placeholder="Phone number" required>
+          <input type="text" name="phone" placeholder="Phone number" required>
         </div>
+
         <small>You agree to Onyx <a href="#">Terms</a> and <a href="#">Privacy</a></small>
         <button type="submit" class="btn">Register</button>
         <p class="login-text">Already have an account? <a href="{{ route('login') }}">Login</a></p>
       </form>
+
     </section>
   </main>
 </body>

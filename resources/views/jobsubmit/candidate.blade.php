@@ -157,8 +157,26 @@
                                         <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
                                         <td>{{ $lamaran->created_at->format('d M Y') }}</td>
                                         <td><strong>{{ $lamaran->score }}</strong></td>
-                                        <td><i class="bi bi-eye" title="Lihat"
-                                        onclick="showApplicantProfile(`{{ $user->name }}`, `{{ $user->email }}`, `{{ $lamaran->skor ?? 0 }}`, '-', '-', '-', '-')"></i></td>
+                                        <td>
+                                            <i class="bi bi-eye" title="Lihat"
+                                            onclick="showApplicantProfile(
+                                                `{{ $user->profile->full_name ?? '-' }}`,
+                                                `{{ $user->email }}`,
+                                                `{{ $lamaran->score ?? 0 }}`,
+                                                `{{ $user->profile?->skills ? implode(', ', json_decode($user->profile->skills, true)) : '-' }}`,
+                                                `{{ $user->profile->complete_address ?? '-' }}`,
+                                                `{{ $user->profile->contact_number ?? '-' }}`,
+                                                `{{ $user->profile->bio ?? '-' }}`,
+                                                `{{ $user->profile->avatar ?? '-' }}`,
+                                                `{{ $lamaran->resume_path ?? '-' }}`,
+                                                `{{ $lamaran->application_letter_path ?? '-' }}`,
+                                                `{{ $lamaran->portfolio_link ?? '-' }}`,
+                                                `{{ $user->profile->education ?? '-' }}`, // education
+                                                `{{ $user->workExperiences ?? '-' }}` // experience
+                                            )">
+                                            </i>
+
+                                        </td>
                                         <td><input type="checkbox" name="lamaran_ids[]" value="{{ $lamaran->id }}"></td>
                                     </tr>
                                 @endforeach
@@ -196,8 +214,24 @@
                                     <td>{{ $lamaran->created_at->format('d M Y') }}</td>
                                     <td><strong>{{ $lamaran->score }}</strong></td>
                                     <td class="action-icons">
-                                        <i class="bi bi-eye" title="Lihat"
-                                       onclick="showApplicantProfile(`{{ $user->name }}`, `{{ $user->email }}`, `{{ $lamaran->skor ?? 0 }}`, '-', '-', '-', '-')"></i>
+                                       <i class="bi bi-eye" title="Lihat"
+                                            onclick="showApplicantProfile(
+                                                `{{ $user->profile->full_name ?? '-' }}`,
+                                                `{{ $user->email }}`,
+                                                `{{ $lamaran->score ?? 0 }}`,
+                                                `{{ $user->profile?->skills ? implode(', ', json_decode($user->profile->skills, true)) : '-' }}`,
+                                                `{{ $user->profile->complete_address ?? '-' }}`,
+                                                `{{ $user->profile->contact_number ?? '-' }}`,
+                                                `{{ $user->profile->bio ?? '-' }}`,
+                                                `{{ $user->profile->avatar ?? '-' }}`,
+                                                `{{ $lamaran->resume_path ?? '-' }}`,
+                                                `{{ $lamaran->application_letter_path ?? '-' }}`,
+                                                `{{ $lamaran->portfolio_link ?? '-' }}`,
+                                                `{{ $user->profile->education ?? '-' }}`, // education
+                                                `{{ $user->workExperiences ?? '-' }}` // experience
+                                            )">
+                                            </i>
+
                                             @if ($canInterview or $canTest)
                                             <i class="bi bi-calendar-event" title="Undang Interview"
                                                 onclick="openInterviewModal({{ $user->id }})"></i>
@@ -314,7 +348,14 @@
                   </div>
                   <div class="modal-body">
                       <div class="d-flex align-items-center mb-4">
-                          <div class="table-avatar me-3"></div>
+                            <div class="table-avatar me-3">
+                                <img id="modalUserAvatar"
+                                    src="{{ asset('default-avatar.png') }}"
+                                    alt="Avatar"
+                                    class="rounded-circle"
+                                    width="40" height="40">
+                            </div>
+
                           <div>
                               <h5 id="modalUserName" class="mb-0">Nama Pelamar</h5>
                               <small id="modalUserEmail" class="text-muted">Email</small>
@@ -328,13 +369,30 @@
                           <p><strong>No. Telepon:</strong> <span id="modalUserPhone">-</span></p>
                           <p><strong>Deskripsi Diri:</strong></p>
                           <p id="modalUserDescription">-</p>
+                          <p><strong>Resume:</strong> <span id="modalUserResume">-</span></p>
+                        <p><strong>Application Letter:</strong> <span id="modalUserApplicationLetter">-</span></p>
+                        <p><strong>Portfolio:</strong> <span id="modalUserPortfolio">-</span></p>
+                        <p><strong>Pendidikan:</strong></p>
+                        <ul id="modalUserEducation">
+                            <li>-</li>
+                        </ul>
+
+                        <p><strong>Pengalaman Kerja:</strong></p>
+                        <ul id="modalUserExperienceList">
+                            <li>-</li>
+                        </ul>
+
                       </div>
                   </div>
               </div>
           </div>
       </div>
     <script>
-        function showApplicantProfile(name, email, score, tags, address, phone, description) {
+        function showApplicantProfile(
+            name, email, score, tags, address, phone, description, avatar,
+            resume, applicationLetter, portfolio,
+            education, experience // ⬅️ Tambahan parameter
+        ) {
             document.getElementById('modalUserName').innerText = name;
             document.getElementById('modalUserEmail').innerText = email;
             document.getElementById('modalUserScore').innerText = score;
@@ -343,8 +401,52 @@
             document.getElementById('modalUserPhone').innerText = phone;
             document.getElementById('modalUserDescription').innerText = description;
 
+            document.getElementById('modalUserAvatar').src = avatar !== '-' ? `/storage/${avatar}` : '{{ asset('default-avatar.png') }}';
+
+            document.getElementById('modalUserResume').innerHTML = resume !== '-' ? `<a href="/storage/${resume}" target="_blank">Lihat CV</a>` : '-';
+            document.getElementById('modalUserApplicationLetter').innerHTML = applicationLetter !== '-' ? `<a href="/storage/${applicationLetter}" target="_blank">Lihat Surat Lamaran</a>` : '-';
+            document.getElementById('modalUserPortfolio').innerHTML = portfolio !== '-' ? `<a href="${portfolio}" target="_blank">Lihat Portfolio</a>` : '-';
+
+            // ✅ Set education (as JSON)
+            const eduElement = document.getElementById('modalUserEducation');
+            eduElement.innerHTML = '-'; // Default
+            try {
+                const eduData = JSON.parse(education);
+                if (Array.isArray(eduData) && eduData.length > 0) {
+                    eduElement.innerHTML = '';
+                    eduData.forEach(item => {
+                        eduElement.innerHTML += `<li><strong>${item.year}</strong> - ${item.major} di ${item.university}<br><em>${item.description}</em></li>`;
+                    });
+                }
+            } catch (e) {
+                eduElement.innerHTML = '<li>Tidak tersedia</li>';
+            }
+
+            // ✅ Set experience
+            // Tampilkan pengalaman kerja
+            const expElement = document.getElementById('modalUserExperienceList');
+            expElement.innerHTML = '-';
+            try {
+                const expData = JSON.parse(experience);
+                if (Array.isArray(expData) && expData.length > 0) {
+                    expElement.innerHTML = '';
+                    expData.forEach(item => {
+                        expElement.innerHTML += `
+                            <li>
+                                <strong>${item.position}</strong> di ${item.company} <br>
+                                <small>${item.start_date} s/d ${item.end_date}</small><br>
+                                <em>${item.description ?? '-'}</em>
+                            </li>`;
+                    });
+                }
+            } catch (e) {
+                expElement.innerHTML = '<li>Tidak tersedia</li>';
+            }
+
             new bootstrap.Modal(document.getElementById('viewApplicantModal')).show();
         }
+
+
 
         function openInterviewModal(userId) {
             const modalId = 'interviewModal-' + userId;

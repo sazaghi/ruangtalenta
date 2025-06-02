@@ -65,23 +65,32 @@
 </section>
 
   <div class="container mt-4">
-    <form action="{{ route('job.filtering') }}" method="GET">
-      <div class="d-flex mb-4">
-        <input type="text" name="keyword" class="form-control me-2" placeholder="Cari posisi atau perusahaan..." value="{{ request()->get('keyword') }}">
-        <button type="submit" class="btn btn-danger me-2">Cari</button>
-        <select class="form-select" name="sort_by" style="max-width: 180px;">
-            <option value="default" {{ request()->get('sort_by') == 'default' ? 'selected' : '' }}>Sort by default</option>
-            <option value="newest" {{ request()->get('sort_by') == 'newest' ? 'selected' : '' }}>Sort by Newest</option>
-            <option value="oldest" {{ request()->get('sort_by') == 'oldest' ? 'selected' : '' }}>Sort by Oldest</option>
-            <option value="recommended" {{ request()->get('sort_by') == 'recommended' ? 'selected' : '' }}>Recommended for You</option>
-        </select>
-      </div>
-    </form>
+    <div class="d-flex mb-4 align-items-center" style="gap: 0.5rem;">
+        <!-- Form pencarian -->
+        <form action="{{ route('job.show') }}" method="GET" class="d-flex flex-grow-1" style="gap: 0.5rem;">
+            <input type="text" name="keyword" class="form-control" placeholder="Cari posisi atau perusahaan..." value="{{ request()->get('keyword') }}">
+            <button type="submit" class="btn btn-danger">Cari</button>
+        </form>
+
+        <!-- Form sorting -->
+        <form method="GET" id="sortForm">
+            @if(request()->has('keyword'))
+                <input type="hidden" name="keyword" value="{{ request()->get('keyword') }}">
+            @endif
+            <select class="form-select" name="sort_by" onchange="document.getElementById('sortForm').submit()" style="min-width: 180px;">
+                <option value="default" {{ request()->get('sort_by') == 'default' ? 'selected' : '' }}>Sort by Default</option>
+                <option value="newest" {{ request()->get('sort_by') == 'newest' ? 'selected' : '' }}>Sort by Newest</option>
+                <option value="oldest" {{ request()->get('sort_by') == 'oldest' ? 'selected' : '' }}>Sort by Oldest</option>
+                <option value="recommended" {{ request()->get('sort_by') == 'recommended' ? 'selected' : '' }}>Recommended for You</option>
+            </select>
+        </form>
+    </div>
+
     <div class="row">
       <div class="col-md-3">
         <div class="filter-section">
           <div class='mb-4 fs-4 fw-bold'>Filter and Shorting</div>
-            <form action="{{ route('job.filtering') }}" method="GET">
+            <form action="{{ route('job.show') }}" method="GET">
             {{-- Location --}}
             <div class="mb-3">
               <label class="form-label fw-bold">Location</label>
@@ -160,9 +169,13 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <div class="d-flex align-items-center">
-                  <img src="{{ asset('storage/' . $job->company->profile->avatar) }}" onerror="this.src='https://via.placeholder.com/40'" alt="Logo" width="40" class="me-2 rounded-circle">
+                  <img src="{{ asset('storage/' . optional($job->company?->profile)->avatar ?? 'default-avatar.png') }}"
+                  onerror="this.src='https://via.placeholder.com/40'"
+                  alt="Logo"
+                  width="40"
+                  class="me-2 rounded-circle">
                   <div>
-                    <strong class="d-block">{{ $job->company->name }}</strong>
+                    <strong class="d-block">{{ $job->company->profile->full_name ?? 'Unknown' }}</strong>
                     <small class="text-muted">{{ $job->location }}</small>
                   </div>
                 </div>
@@ -187,7 +200,10 @@
               </div>
 
               <div class="d-flex justify-content-between align-items-center mt-3">
-                <strong>Rp {{ number_format($job->salary_min, 0, ',', '.') }} - Rp {{ number_format($job->salary_max, 0, ',', '.') }}</strong>
+                <div class="d-flex flex-column align-items-start">
+                  <span class="badge bg-warning mb-1">salary</span>
+                  <strong>Rp {{ number_format($job->salary_min, 0, ',', '.') }} - Rp {{ number_format($job->salary_max, 0, ',', '.') }}</strong>
+                </div>
 
                 @if (auth()->check() && auth()->user()->hasRole('pencarikerja'))
                   <form action="{{ route('job.apply', $job->id) }}" method="POST" class="mb-0">

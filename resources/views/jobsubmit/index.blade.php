@@ -25,6 +25,20 @@
             border-bottom: 2px solid #6f42c1;
             font-weight: bold;
         }
+        .skill-badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        background-color: #0d6efd;
+        color: #fff;
+        display: inline-block;
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+    .remove-skill {
+        margin-left: 6px;
+        font-weight: bold;
+        color: #fff;
+    }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -45,47 +59,46 @@
                 {{ __('Post Jobs') }}
             </h2>
         </x-slot>
-
+        
         <!-- Modal Submit Job -->
-        <div class="modal fade" id="submitJobModal" tabindex="-1" aria-labelledby="submitJobModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <form action="{{ url('/job') }}" method="POST">
-                        @csrf
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="submitJobModalLabel">Submit Job</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        
-                        <div class="modal-body">
-                        <div class="mb-3">
+        <!-- Modal Submit Job -->
+<div class="modal fade" id="submitJobModal" tabindex="-1" aria-labelledby="submitJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <form action="{{ route('job.store') }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitJobModalLabel">Posting Lowongan Pekerjaan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
                             <label for="title" class="form-label">Judul Pekerjaan</label>
                             <input type="text" class="form-control" id="title" name="title" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Deskripsi Pekerjaan</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Gaji Minimum (Opsional)</label>
-                            <input type="number" class="form-control" name="salary_min" placeholder="Contoh: 5000000">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Gaji Maksimum (Opsional)</label>
-                            <input type="number" class="form-control" name="salary_max" placeholder="Contoh: 10000000">
-                        </div>
-                        <div class="mb-3">
-                            <label for="location" class="form-label">Location</label>
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">Lokasi</label>
                             <input type="text" name="location" class="form-control">
                         </div>
 
-                        <div class="mb-3">
-                            <label for="experience" class="form-label">Experience</label>
+                        <div class="col-md-6">
+                            <label class="form-label">Gaji Minimum (Opsional)</label>
+                            <input type="number" class="form-control" name="salary_min" placeholder="Contoh: 5000000">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Gaji Maksimum (Opsional)</label>
+                            <input type="number" class="form-control" name="salary_max" placeholder="Contoh: 10000000">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="experience" class="form-label">Pengalaman</label>
                             <input type="text" name="experience" class="form-control">
                         </div>
-                        <div class="mb-3">
-                        <label for="job_type" class="form-label">Tipe Pekerjaan</label>
-                            <select name="job_type" class="form-control">
+                        <div class="col-md-6">
+                            <label for="job_type" class="form-label">Tipe Pekerjaan</label>
+                            <select name="job_type" class="form-select">
                                 <option value="">Pilih Tipe</option>
                                 <option value="Full-Time">Full-Time</option>
                                 <option value="Part-Time">Part-Time</option>
@@ -94,16 +107,53 @@
                             </select>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-md-12">
+                            <label for="description" class="form-label">Deskripsi Pekerjaan</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                        </div>
+
+                        <div class="col-md-6">
                             <label for="deadline" class="form-label">Deadline Lamaran</label>
                             <input type="date" name="deadline" class="form-control">
                         </div>
-                        <div class="mb-4">
-                            <label for="deadline" class="form-label">Skill required</label>
-                            <input type="text" name="skills" id="skills" class="mt-1 block w-full" value="{{ old('skills') }}" placeholder="Contoh: PHP, Laravel, JavaScript">
-                            @error('skills') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+
+                        <div class="col-md-6">
+                            <label for="category_id" class="form-label">Kategori</label>
+                            <select class="form-select" name="category_id" required>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="mb-3">
+
+                        <div class="col-md-12">
+                            <label for="skills" class="form-label">Skill yang Dibutuhkan</label>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-search me-2"></i>
+                                <input type="text" id="skill-input" class="form-control" placeholder="Contoh: PHP, Laravel..." autocomplete="off">
+                            </div>
+
+                            <div id="skill-tags" class="skill-tags mb-2">
+                                @php
+                                    $existingSkills = old('skills', []);
+                                    if (is_string($existingSkills)) {
+                                        $existingSkills = json_decode($existingSkills, true);
+                                    }
+                                @endphp
+                                @foreach ($existingSkills as $skill)
+                                    <span class="badge bg-primary me-1 mb-1 skill-badge">
+                                        {{ $skill }} <i class="remove-skill ms-1" style="cursor:pointer;" data-skill="{{ $skill }}">&times;</i>
+                                    </span>
+                                @endforeach
+                            </div>
+
+                            <input type="hidden" name="skills" id="skills-hidden" value='@json($existingSkills)'>
+                            @error('skills') <span class="text-danger text-sm">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="col-md-12">
                             <label class="form-label">Tahapan Seleksi</label>
                             <div id="selection-stages-container">
                                 <div class="input-group mb-2">
@@ -111,33 +161,34 @@
                                     <button class="btn btn-danger remove-stage" type="button">×</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-sm btn-outline-primary" id="add-selection-stage">+ Tambah Tahapan</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-selection-stage">+ Tambah Tahapan</button>
                         </div>
-                        <label class="form-label">Category:</label>
-                        <select class="form-select" name="category_id" required>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
 
-                        <label class="form-label">Metode Seleksi:</label>
-                        @foreach ($selectionMethods as $method)
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="{{ $method->name }}" id="sm{{ $loop->index }}" name="selection_methods[]">
-                                <label class="form-check-label" for="sm{{ $loop->index }}">{{ $method->name }}</label>
+                        <div class="col-md-12">
+                            <label class="form-label">Metode Seleksi:</label>
+                            <div class="row">
+                                @foreach ($selectionMethods as $method)
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="{{ $method->name }}" id="sm{{ $loop->index }}" name="selection_methods[]">
+                                            <label class="form-check-label" for="sm{{ $loop->index }}">{{ $method->name }}</label>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                        @endforeach
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Posting Pekerjaan</button>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Posting Pekerjaan</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
     
     @php
         $activeTab = request('tab', 'active'); // Ambil dari query string, default 'active'
@@ -254,6 +305,47 @@
                 e.target.closest('.input-group').remove();
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const skillInput = document.getElementById('skill-input');
+        const skillTags = document.getElementById('skill-tags');
+        const hiddenSkills = document.getElementById('skills-hidden');
+
+        let skills = JSON.parse(hiddenSkills.value || '[]');
+
+        function renderSkills() {
+            skillTags.innerHTML = '';
+            skills.forEach(skill => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-primary me-1 mb-1 skill-badge';
+                badge.innerHTML = `${skill} <i class="remove-skill ms-1" style="cursor:pointer;" data-skill="${skill}">&times;</i>`;
+                skillTags.appendChild(badge);
+            });
+            hiddenSkills.value = JSON.stringify(skills);
+        }
+
+        skillInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const value = skillInput.value.trim();
+                if (value && !skills.includes(value)) {
+                    skills.push(value);
+                    renderSkills();
+                }
+                skillInput.value = '';
+            }
+        });
+
+        skillTags.addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-skill')) {
+                const skillToRemove = e.target.getAttribute('data-skill');
+                skills = skills.filter(s => s !== skillToRemove);
+                renderSkills();
+            }
+        });
+
+        renderSkills();
+    });
     </script>
 
 

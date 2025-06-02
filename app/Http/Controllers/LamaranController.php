@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Lamaran;
 use App\Models\PostKerja;
 use App\Models\Interview;
@@ -38,33 +39,44 @@ class LamaranController extends Controller
 
         $job = PostKerja::findOrFail($jobId);
 
-        // Cek apakah user sudah apply sebelumnya
         if (Lamaran::where('user_id', $user->id)->where('post_kerjas_id', $jobId)->exists()) {
             return back()->with('error', 'You have already applied for this job.');
         }
 
-        // Ambil skill dari tabel bios
         $bio = Bio::where('user_id', $user->id)->first();
         $userSkills = $bio ? json_decode($bio->skills ?? '[]', true) : [];
         $jobSkills = $job->skills ?? [];
 
-        
-        // Normalisasi lowercase biar aman
         $userSkills = array_map('strtolower', $userSkills);
         $jobSkills = array_map('strtolower', $jobSkills);
 
         $score = $this->calculateSimilarity($userSkills, $jobSkills);
+
+        $cvPath = null;
+        $applicationLetterPath = null;
+        $portofolioPath = null;
+
+        if ($request->hasFile('resume_file')) {
+            $cvPath = $request->file('resume_file')->store('resume', 'public');
+        }
+        if ($request->hasFile('application_letter_file')) {
+            $applicationLetterPath = $request->file('application_letter_file')->store('application_letters', 'public');
+        }
+
 
         // Simpan aplikasi
         $lamaran = Lamaran::create([
             'user_id' => $user->id,
             'post_kerjas_id' => $job->id,
             'status' => 'pending',
-            'score' => round($score * 100), // bisa dikali 100 biar keliatan persentase
+            'score' => round($score * 100),
+            'resume_path' => $cvPath,
+            'application_letter_path' => $applicationLetterPath,
         ]);
 
         return back()->with('success', 'Job application submitted successfully.');
     }
+
 
     public function tracking()
     {
@@ -154,6 +166,13 @@ class LamaranController extends Controller
 
         return redirect()->back()->with('success', 'Status lamaran berhasil diperbarui.');
     }
+    // ApplicantController.php
+    public function show(User $user)
+    {
+        $user->load(['profile', 'educations', 'workExperiences']);
 
+        $lamaran = $user->lamarans()->latest()->first(); // atau sesuai filter
 
+        return view('lamaran.show', compact('user', 'lamaran'));
+    }
 }

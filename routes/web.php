@@ -35,6 +35,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/register-perusahaan', [RegisteredUserController::class, 'perusahaanregister'])->name('register.perusahaan');
+Route::post('/register-perusahaan', [RegisteredUserController::class, 'storePerusahaan'])->name('register.perusahaan');
 
 // Route dashboard dengan akses berdasarkan role
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -52,6 +53,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('tracking-lamaran', [LamaranController::class, 'tracking'])->name('job.tracking');
     Route::post('/lamaran/finalize/{id}', [LamaranController::class, 'finalize'])->name('lamaran.finalize');
+    // web.php
+    Route::get('/lamaran/{user}', [LamaranController::class, 'show'])->name('lamaran.show');
+
 
     Route::post('/job', [JobPostController::class, 'store'])->name('job.store');
     Route::post('/job/{job}/apply', [LamaranController::class, 'store'])->name('job.apply');

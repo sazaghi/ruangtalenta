@@ -357,8 +357,8 @@
         </div>
         @elseif(auth()->user()->hasRole('perusahaan'))
         <div class="col-md-9">
-                <div class="card">
-                    <div class="card-header">Update Your Profile</div>
+            <div class="card">
+                <div class="card-header">Update Your Profile</div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('bio.store') }}" enctype="multipart/form-data">
                             @csrf
@@ -409,6 +409,85 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <!-- Social Network -->
+                <form method="POST" action="{{ route('bio.store') }}">
+                    @csrf
+                    <div class="card mb-3">
+                        <div class="card-header">Social Network</div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label>Facebook</label>
+                                <input type="text" name="facebook" class="form-control" 
+                                    value="{{ old('facebook', $bio->facebook ?? '') }}" 
+                                    placeholder="https://facebook.com/yourhandle" autocomplete="off">
+                            </div>
+                            <div class="mb-3">
+                                <label>Twitter</label>
+                                <input type="text" name="twitter" class="form-control" 
+                                    value="{{ old('twitter', $bio->twitter ?? '') }}" 
+                                    placeholder="https://twitter.com/yourhandle" autocomplete="off">
+                            </div>
+                            <div class="mb-3">
+                                <label>Instagram</label>
+                                <input type="text" name="instagram" class="form-control" 
+                                    value="{{ old('instagram', $bio->instagram ?? '') }}" 
+                                    placeholder="https://instagram.com/yourhandle" autocomplete="off">
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-save me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Contact Info -->
+            <form method="POST" action="{{ route('bio.store') }}">
+                @csrf
+                <div class="card mt-3">
+                    <div class="card-header">Contact Information</div>
+                    <div class="card-body">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Country</label>
+                                <input 
+                                    type="text" 
+                                    name="country" 
+                                    class="form-control" 
+                                    placeholder="Enter your country" 
+                                    autocomplete="off"
+                                    value="{{ old('country', $bio->country ?? '') }}"
+                                >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">City</label>
+                                <input 
+                                    type="text" 
+                                    name="city" 
+                                    class="form-control" 
+                                    placeholder="Enter your city" 
+                                    autocomplete="off"
+                                    value="{{ old('city', $bio->city ?? '') }}"
+                                >
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Complete Address</label>
+                            <input 
+                                type="text" 
+                                name="complete_address" 
+                                class="form-control" 
+                                placeholder="Enter your complete address" 
+                                autocomplete="off"
+                                value="{{ old('complete_address', $bio->complete_address ?? '') }}"
+                            >
+                        </div>
+                        <button class="btn btn-outline-primary" type="submit">
+                            <i class="fas fa-save me-1"></i> Save Address
+                        </button>
+                    </div>
+                </div>
+            </form>
         @endif
     </div>
     <script>

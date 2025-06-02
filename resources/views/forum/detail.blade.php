@@ -16,76 +16,85 @@
 
     <!-- Main Post -->
     <div class="col-md-8">
-      <a href="{{ route('post.index') }}" class="text-decoration-none text-primary small d-inline-block mb-2">&larr; Back to Community</a>
+      <a href="{{ route('post.index') }}" class="text-decoration-none text-primary small d-inline-block mb-3">
+        &larr; Back to Community
+      </a>
 
-      <h1 class="h4 fw-semibold mb-2 text-start">{{ $post->title }}</h1>
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <h1 class="h5 fw-bold mb-3">{{ $post->title }}</h1>
 
-      <div class="d-flex align-items-center text-muted small mb-3">
-        <img src="{{ $reply->user->profile_picture_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($reply->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
-             alt="Foto Profil" 
-             class="rounded-circle me-2" 
-             style="width: 24px; height: 24px;">
-        <span class="fw-semibold small text-dark">{{ $reply->user->name ?? 'Unknown' }}</span>
-        <span class="mx-2">•</span>
-        <span>{{ $post->created_at->diffForHumans() }}</span>
+          <div class="d-flex align-items-center text-muted small mb-3">
+            <img src="{{ $post->user->profile_picture_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($post->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
+                alt="Foto Profil" class="rounded-circle me-2" style="width: 24px; height: 24px;">
+            <span class="fw-semibold text-dark">{{ $post->user->name ?? 'Unknown' }}</span>
+            <span class="mx-2">•</span>
+            <span>{{ $post->created_at->diffForHumans() }}</span>
+          </div>
+
+          <div class="text-dark mb-3">
+            {!! nl2br(e($post->content)) !!}
+          </div>
+
+          <button onclick="toggleReplyModal()" class="btn btn-outline-primary btn-sm">Reply to this Post</button>
+        </div>
       </div>
 
-      <div class="bg-white rounded p-4 text-dark shadow-sm mb-4 text-start">
-        {!! nl2br(e($post->content)) !!}
-      </div>
+      <h2 class="h6 fw-semibold mb-3 text-dark">{{ $post->replies->count() }} Comment</h2>
 
-      <button onclick="toggleReplyModal()" class="btn btn-outline-secondary btn-sm mb-4">Reply To the Post</button>
-
-      <h2 class="h6 fw-semibold mb-3 text-dark text-start">{{ $post->replies->count() }} Comment</h2>
-
-      <!-- Comment Thread -->
       <div class="d-flex flex-column gap-3">
         @foreach ($post->replies as $reply)
           @include('forum.partials._reply', ['reply' => $reply])
         @endforeach
       </div>
     </div>
-
-    <!-- Sidebar -->
     <aside class="col-md-4">
-      <div class="mb-5">
-        <h3 class="h6 fw-semibold mb-3 text-dark">Popular Discussion</h3>
-        <ul class="list-unstyled small text-dark">
-          @foreach ($popularPosts as $p)
-          <li class="mb-3">
-            <div class="fw-bold">
-              <img src="{{ $p->user->profile_picture_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($p->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
+      <h5 class="card-title mb-3 text-dark">Popular Discussions</h5>
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <ul class="list-unstyled">
+            @foreach ($popularPosts as $p)
+            <li class="mb-3">
+              <div class="d-flex align-items-center mb-1">
+                <img src="{{ $p->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($p->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
                    alt="Foto Profil" 
                    class="rounded-circle me-2" 
                    style="width: 16px; height: 16px;">
-              <span class="fw-semibold small text-dark">{{ $p->user->name ?? 'Unknown' }}</span>
-            </div>
-            <a href="{{ route('post.show', $p->id) }}" class="text-decoration-none">{{ \Illuminate\Support\Str::limit($p->title, 60) }}</a><br>
-            <span class="text-muted small">{{ $p->replies_count }}x Reply</span>
-          </li>
-          @endforeach
-        </ul>
+                <small class="fw-semibold text-dark">{{ $p->user->name ?? 'Unknown' }}</small>
+              </div>
+              <a href="{{ route('post.show', $p->id) }}" class="text-decoration-none d-block fw-medium text-primary">
+                {{ \Illuminate\Support\Str::limit($p->title, 60) }}
+              </a>
+              <small class="text-muted">{{ $p->replies_count }}x Reply</small>
+            </li>
+            @endforeach
+          </ul>
+        </div>
       </div>
-
-      <div>
-        <h3 class="h6 fw-semibold mb-3 text-dark">Unanswered Discussion</h3>
-        <ul class="list-unstyled small text-dark">
-          @foreach ($unansweredPosts as $p)
-          <li class="mb-3">
-            <div class="fw-bold">
-              <img src="{{ $p->user->profile_picture_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($p->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
+      <h5 class="card-title mb-3 text-dark">Unanswered Discussions</h5>
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <ul class="list-unstyled">
+            @foreach ($unansweredPosts as $p)
+            <li class="mb-3">
+              <div class="d-flex align-items-center mb-1">
+                <img src="{{ $p->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($p->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
                    alt="Foto Profil" 
                    class="rounded-circle me-2" 
                    style="width: 16px; height: 16px;">
-              <span class="fw-semibold small text-dark">{{ $p->user->name ?? 'Unknown' }}</span>
-            </div>
-            <a href="{{ route('post.show', $p->id) }}" class="text-decoration-none">{{ \Illuminate\Support\Str::limit($p->title, 60) }}</a><br>
-            <span class="text-muted small">0 comment</span>
-          </li>
-          @endforeach
-        </ul>
+                <small class="fw-semibold text-dark">{{ $p->user->name ?? 'Unknown' }}</small>
+              </div>
+              <a href="{{ route('post.show', $p->id) }}" class="text-decoration-none d-block fw-medium text-primary">
+                {{ \Illuminate\Support\Str::limit($p->title, 60) }}
+              </a>
+              <small class="text-muted">0 comment</small>
+            </li>
+            @endforeach
+          </ul>
+        </div>
       </div>
     </aside>
+
   </div>
 </div>
 

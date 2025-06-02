@@ -34,7 +34,7 @@
             <h5 class="fw-bold mb-1">{{ $job->title }}</h5>
             <div class="mb-2">
               <i class="bi bi-buildings me-1"></i>
-              <a href="#" class="text-primary fw-semibold text-decoration-none">{{ $job->company->name }}</a>
+              <a href="#" class="text-primary fw-semibold text-decoration-none">{{ $job->company->profile->full_name ?? 'Unknown' }}</a>
             </div>
 
             <ul class="list-unstyled small text-muted mb-0">
@@ -139,52 +139,55 @@
         </div>
     </div>
 <div class="container my-5">
-    <div class="mt-5">
-        <h2 class="h4 mb-4">Rekomendasi Kursus</h2>
+    <h2 class="h4 mb-4">Rekomendasi Kursus</h2>
 
-        <div id="courseCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner" id="course-carousel">
-                @if ($rekomendasi && count($rekomendasi) > 0)
-                    @foreach ($rekomendasi as $index => $course)
-                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                            <div class="d-flex justify-content-center">
-                                <div class="card" style="width: 18rem;">
-                                    <div class="card-body text-center">
-                                        <h5 class="card-title">{{ $course['title'] }}</h5>
-                                        <p class="card-text">{{ $course['description'] }}</p>
-                                        <a href="{{ $course['link'] }}" target="_blank" class="btn btn-primary mt-3">Lihat Kursus</a>
-                                    </div>
-                                </div>
+    <div id="courseCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @if ($rekomendasi && count($rekomendasi) > 0)
+                @foreach ($rekomendasi as $index => $course)
+                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between text-dark rounded p-4" style="min-height: 300px; background-color: #D3D8EB;">
+                            <!-- Text Kiri -->
+                            <div class="col-md-6 text-center text-md-start">
+                                <h3 class="fw-bold display-6">{{ $course['title'] }}</h3>
+                                <p class="mt-3">{{ $course['description'] }}</p>
+                                <a href="{{ $course['link'] }}" target="_blank" class="btn btn-dark mt-3">Lihat Kursus</a>
                             </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="carousel-item active">
-                        <div class="d-flex justify-content-center">
-                            <div class="card text-center" style="width: 18rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tidak ada kursus yang direkomendasikan</h5>
-                                    <p class="card-text">Silakan cek kembali nanti.</p>
-                                </div>
+                            
+                            <!-- Gambar Kanan -->
+                            <div class="col-md-5 text-center mt-4 mt-md-0">
+                                <img src="{{ asset('images/examplecouse.jpg') }}" alt="Ilustrasi" class="img-fluid" style="max-height: 250px;">
                             </div>
                         </div>
                     </div>
-                @endif
-            </div>
-
-
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+                @endforeach
+            @else
+                <div class="carousel-item active">
+                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between bg-light text-dark rounded p-4" style="min-height: 300px;">
+                        <div class="col-md-6 text-center text-md-start">
+                            <h3 class="fw-bold">Tidak ada kursus yang direkomendasikan</h3>
+                            <p class="mt-3">Silakan cek kembali nanti.</p>
+                        </div>
+                        <div class="col-md-5 text-center mt-4 mt-md-0">
+                            <img src="{{ asset('images/empty.png') }}" alt="Kosong" class="img-fluid" style="max-height: 250px;">
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

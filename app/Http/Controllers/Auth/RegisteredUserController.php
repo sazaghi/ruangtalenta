@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegisterMail;
 
 class RegisteredUserController extends Controller
 {
@@ -52,5 +54,24 @@ class RegisteredUserController extends Controller
     public function perusahaanregister(): View
     {
         return view('auth.registerCompany');
+    }
+    public function storePerusahaan(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'phone' => ['required', 'string'],
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ];
+
+        // Kirim email ke admin/HRD
+        Mail::to('raharja.monita19@gmail.com')->send(new RegisterMail($data));
+
+        return redirect()->back()->with('success', 'Pendaftaran berhasil dikirim!');
     }
 }

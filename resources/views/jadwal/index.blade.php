@@ -82,7 +82,9 @@
         }
 
         .Interview {
-            color: #000;
+            background-color: #D3D8EB;
+            color: #1a237e;
+            border-radius: 12px;
         }
 
         .day-names {

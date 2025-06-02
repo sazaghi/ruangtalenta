@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lamaran;
 use Illuminate\Http\Request;
 use App\Models\UserUpload;
 use Illuminate\Support\Facades\Storage;
@@ -11,8 +12,31 @@ class UserUploadController extends Controller
     // Menampilkan semua file milik user
     public function index()
     {
-        $uploads = UserUpload::where('user_id', auth()->id())->latest()->get();
-        return view('user_uploads.index', compact('uploads'));
+        $userId = auth()->id();
+
+        $lamarans = Lamaran::where('user_id', $userId)->get();
+
+        $files = [];
+
+        foreach ($lamarans as $lamaran) {
+            if ($lamaran->resume_path) {
+                $files[] = [
+                    'type' => 'Resume',
+                    'path' => $lamaran->resume_path,
+                ];
+            }
+
+            if ($lamaran->application_letter_path) {
+                $files[] = [
+                    'type' => 'Application Letter',
+                    'path' => $lamaran->application_letter_path,
+                ];
+            }
+        }
+
+        return view('user_uploads.index', [
+            'files' => $files,
+        ]);
     }
 
     // Menyimpan file upload

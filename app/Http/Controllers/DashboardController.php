@@ -19,7 +19,7 @@ class DashboardController extends Controller
         if ($user->hasRole('perusahaan')) {
             $recentJobs = PostKerja::where('user_id', $user->id)
                     ->latest()
-                    ->take(5)
+                    ->take(3)
                     ->get();
             // List semua job yang di-post perusahaan (buat dropdown)
             $jobList = PostKerja::where('user_id', $user->id)->get();

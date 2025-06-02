@@ -18,25 +18,29 @@ class JobPostController extends Controller
     public function store(Request $request)
     {   
         $user = Auth::user();
+
         if (!$user->hasRole('perusahaan')) {
             return response()->json(['message' => 'Anda tidak memiliki izin untuk memposting pekerjaan.'], 403);
         }
 
-        $request->validate([
-            'category_id' => 'required|exists:categories,id', // Pastikan category_id ada di tabel categories
-            'title' => 'required|string|max:255',
-            'description' => 'required',
-            'salary_min' => 'nullable|integer|min:0',
-            'salary_max' => 'nullable|integer|gte:salary_min',
-            'selection_methods' => 'array',
-            'location' => 'nullable|string',
-            'experience' => 'nullable|integer',
-            'job_type' => 'nullable|string',
-            'deadline' => 'nullable|date',
-            'skills' => 'nullable|string',
-        ]);
-        
-        
+        try {
+            $validated = $request->validate([
+                'category_id' => 'required|exists:categories,id',
+                'title' => 'required|string|max:255',
+                'description' => 'required',
+                'salary_min' => 'nullable|integer|min:0',
+                'salary_max' => 'nullable|integer|gte:salary_min',
+                'selection_methods' => 'nullable|array',
+                'location' => 'nullable|string',
+                'experience' => 'nullable|integer',
+                'job_type' => 'nullable|string',
+                'deadline' => 'nullable|date',
+                'skills' => 'nullable|string',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            dd($e->errors()); // Ini akan menunjukkan error validasinya
+        }
+
         $skillsArray = null;
         if ($request->filled('skills')) {
             $skillsArray = array_map('trim', explode(',', $request->skills));
@@ -84,19 +88,98 @@ class JobPostController extends Controller
         return view('jobsubmit.index', compact('jobs', 'selectionMethods','categories','activeCount','inactiveCount'));
     }
 
-    public function show()
+    public function show(Request $request)
     {
-        $jobs = PostKerja::latest()->get();
+        $query = PostKerja::query()->with('company', 'category');
+
+        // Keyword search (di title atau company name)
+        if ($request->filled('keyword')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->keyword . '%')
+                ->orWhereHas('company', function ($companyQuery) use ($request) {
+                    $companyQuery->where('name', 'like', '%' . $request->keyword . '%');
+                });
+            });
+        }
+
+        // Filter lokasi
+        if ($request->filled('location')) {
+            $query->whereIn('location', $request->location);
+        }
+
+        // Filter kategori
+        if ($request->filled('categories')) {
+            $query->whereIn('category_id', $request->categories);
+        }
+
+        // Filter salary
+        if ($request->filled('salary_min')) {
+            $query->where('salary_min', '>=', $request->salary_min);
+        }
+        if ($request->filled('salary_max')) {
+            $query->where('salary_max', '<=', $request->salary_max);
+        }
+
+        // Filter experience
+        if ($request->filled('experience_min')) {
+            $query->where('experience', '>=', $request->experience_min);
+        }
+        if ($request->filled('experience_max')) {
+            $query->where('experience', '<=', $request->experience_max);
+        }
+
+        // Filter skills
+        if ($request->filled('skills')) {
+            foreach ($request->skills as $skill) {
+                $query->whereJsonContains('skills', $skill);
+            }
+        }
+
+        // Sorting
+        switch ($request->input('sort_by')) {
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+           case 'recommended':
+                if (auth()->check() && auth()->user()->hasRole('pencarikerja')) {
+                    $userSkillsJson = auth()->user()->profile->skills ?? '[]';
+                    $userSkills = json_decode($userSkillsJson, true); // konversi ke array
+
+                    if (!empty($userSkills)) {
+                        $query->where(function ($q) use ($userSkills) {
+                            foreach ($userSkills as $skill) {
+                                $q->orWhereJsonContains('skills', $skill);
+                            }
+                        });
+                    }
+                }
+                break;
+            default:
+                // Tidak diurutkan, default dari DB (bisa pakai latest jika mau default terbaru)
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        // Ambil data
+        $jobs = $query->get();
+
+        // Data untuk dropdown filter
         $locations = PostKerja::select('location')->distinct()->pluck('location');
         $categories = Category::latest()->get();
+
         $skills = PostKerja::select('skills')->get()
             ->pluck('skills')
             ->flatten()
             ->unique()
             ->filter()
-            ->values(); 
-        return view('jobsubmit.filterjob', compact('jobs', 'locations', 'skills','categories'));
+            ->values();
+
+        return view('jobsubmit.filterjob', compact('jobs', 'locations', 'skills', 'categories'));
     }
+
 
     public function filtering(Request $request)
     {
@@ -229,6 +312,10 @@ class JobPostController extends Controller
         $selectedJob = null;
         if ($request->has('job_id')) {
             $selectedJob = PostKerja::with('lamarans.user')->find($request->job_id);
+
+            if ($selectedJob) {
+                $selectionMethods = $selectedJob->selection_methods ?? [];
+            }
         }
 
         $interviews = collect();

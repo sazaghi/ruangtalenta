@@ -24,20 +24,21 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card">
-                        <div class="card-header">
-                            Job Terbaru
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Job Terbaru</span>
+                            <a href="{{ route('job.store') }}" class="text-decoration-none">Liat semua?</a>
                         </div>
                         <div class="card-body">
-                        @forelse($recentJobs as $job)
-                            <div class="mb-3 text-sm">
-                                <p class="font-bold text-blue-600">📌 {{ $job->title }}</p>
-                                <p class="text-gray-500 text-xs">🕒 {{ $job->created_at->diffForHumans() }}</p>
-                                <p class="text-gray-600">📍 {{ $job->location ?? '-' }}</p>
-                            </div>
-                            <hr class="my-2">
-                        @empty
-                            <p class="text-gray-500 text-sm">Belum ada postingan pekerjaan dari kamu.</p>
-                        @endforelse
+                            @forelse($recentJobs as $job)
+                                <div class="mb-3 text-sm">
+                                    <p class="font-bold text-blue-600">📌 {{ $job->title }}</p>
+                                    <p class="text-gray-500 text-xs">🕒 {{ $job->created_at->diffForHumans() }}</p>
+                                    <p class="text-gray-600">📍 {{ $job->location ?? '-' }}</p>
+                                </div>
+                                <hr class="my-2">
+                            @empty
+                                <p class="text-gray-500 text-sm">Belum ada postingan pekerjaan dari kamu.</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>

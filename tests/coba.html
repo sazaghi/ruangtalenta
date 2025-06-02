@@ -1,100 +1,100 @@
-<div class="row g-4">
-    <!-- Main Form -->
-    <div class="col-md-9">
-        <div class="card">
-            <div class="card-header">Update Your Profile</div>
-            <div class="card-body">
-                <form method="POST" action="{{ route('bio.store') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div class="d-flex mb-4 align-items-center">
-                        <div class="me-4">
-                            @if($bio && $bio->avatar)
-                                <img src="{{ asset('storage/' . $bio->avatar) }}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
-                            @else
-                                <div style="width: 100px; height: 100px; background: #ccc; border-radius: 8px;"></div>
-                            @endif
-                        </div>
-                        <div>
-                            <input type="file" name="avatar" accept="image/*" class="form-control">
-                        </div>
-                    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Full Name <span class="text-danger">*</span></label>
-                            <input type="text" name="full_name" class="form-control" placeholder="Enter your full name" autocomplete="off" value="{{ old('full_name', $bio->full_name ?? '') }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" value="{{ auth()->user()->email }}" disabled>
-                        </div>
-                    </div>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Contact Number</label>
-                            <input type="text" name="contact_number" class="form-control" placeholder="Enter your contact number" autocomplete="off" value="{{ old('contact_number', $bio->contact_number ?? '') }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Personal Website</label>
-                            <input type="url" name="website" class="form-control" placeholder="Enter your website URL" autocomplete="off" value="{{ old('website', $bio->website ?? '') }}">
-                        </div>
-                    </div>
+    <style>
+        body {
+            background-color: #F5F7FC;
+            font-family: 'Poppins', sans-serif;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #1E2A78;
+            min-height: 100vh;
+            color: white;
+            padding: 1rem;
+        }
+        .sidebar h4 {
+            font-weight: 600;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 0;
+        }
+        .sidebar a:hover {
+            background-color: #3945A0;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h4>MyApp</h4>
+            <hr>
+            <a href="#">Dashboard</a>
+            <a href="#">Profile</a>
+            <a href="#">Settings</a>
+            <a href="#">Logout</a>
+        </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Bio</label>
-                        <textarea name="bio" class="form-control" rows="3" placeholder="Write a short bio..." autocomplete="off">{{ old('bio', $bio->bio ?? '') }}</textarea>
-                    </div>
-
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Experience</label>
-                            <input type="text" name="experience" class="form-control" placeholder="Enter experience" autocomplete="off" value="{{ old('experience', $bio->experience ?? '') }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Education Level</label>
-                            <input type="text" name="education_level" class="form-control" placeholder="Enter education level" autocomplete="off" value="{{ old('education_level', $bio->education_level ?? '') }}">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-1"></i> Save Changes
+        <!-- Main Content -->
+        <div class="flex-grow-1">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light shadow-sm px-3 sticky-top" style="background-color: #222D65; font-size: 16px;">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+                        <span class="navbar-toggler-icon"></span>
                     </button>
-                </form>
+
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item me-3">
+                                <a href="#" class="nav-link text-white position-relative">
+                                    <i class="bi bi-bell-fill fs-5"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                    <img src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff&size=32" alt="Avatar" class="rounded-circle" width="32" height="32">
+                                    <span>John Doe</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#">Home</a></li>
+                                    <li><a class="dropdown-item" href="#">Setting</a></li>
+                                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Header -->
+            <div class="container mt-4">
+                <h2>Dashboard</h2>
             </div>
+
+            <!-- Content -->
+            <main class="container mt-4">
+                <p>Selamat datang di halaman dashboard! Konten utama tampil di sini.</p>
+            </main>
         </div>
     </div>
-
-    <!-- Sidebar -->
-    <div class="col-md-3">
-        <!-- Social Network -->
-        <form method="POST" action="{{ route('bio.store') }}">
-            @csrf
-            <div class="card mb-3">
-                <div class="card-header">Social Network</div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label>Facebook</label>
-                        <input type="text" name="facebook" class="form-control" 
-                            value="{{ old('facebook', $bio->facebook ?? '') }}" 
-                            placeholder="https://facebook.com/yourhandle" autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                        <label>Twitter</label>
-                        <input type="text" name="twitter" class="form-control" 
-                            value="{{ old('twitter', $bio->twitter ?? '') }}" 
-                            placeholder="https://twitter.com/yourhandle" autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                        <label>Instagram</label>
-                        <input type="text" name="instagram" class="form-control" 
-                            value="{{ old('instagram', $bio->instagram ?? '') }}" 
-                            placeholder="https://instagram.com/yourhandle" autocomplete="off">
-                    </div>
-                    <button type="submit" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-save me-1"></i> Save Changes
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+</body>
+</html>

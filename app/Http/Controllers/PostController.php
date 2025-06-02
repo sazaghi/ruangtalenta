@@ -9,11 +9,41 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     // Tampilkan semua postingan utama + balasannya
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::all();
-        return view('forum.index', compact('posts'));
+        // Ambil 3 post dengan jumlah reply terbanyak
+        $topPosts = Post::withCount('replies')
+            ->orderBy('replies_count', 'desc')
+            ->take(3)
+            ->pluck('id')
+            ->toArray();
+
+        // Query dasar
+        $query = Post::with('user')->withCount('replies');
+
+        // Sorting berdasarkan dropdown filter
+        switch ($request->input('sort')) {
+            case 'latest':
+                $query->orderBy('created_at', 'desc');
+                break;
+
+            case 'popular':
+                $query->orderBy('replies_count', 'desc');
+                break;
+
+            case 'me':
+                $query->where('user_id', auth()->id());
+                break;
+
+            // default: tidak sort/filter apa pun
+        }
+
+        // Ambil hasilnya (pakai paginate jika perlu)
+        $posts = $query->get();
+
+        return view('forum.index', compact('posts', 'topPosts'));
     }
+
 
     // Simpan postingan baru atau balasan
     public function store(Request $request)

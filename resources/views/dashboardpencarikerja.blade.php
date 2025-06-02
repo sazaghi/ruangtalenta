@@ -61,9 +61,9 @@
                     <div class="card-body">
                         @forelse($recentJobs as $job)
                             <div class="mb-3">
-                                <p class="text-gray-900 font-medium">{{ $job->postKerja->judul }}</p>
-                                <p class="text-red-500 text-sm">{{ $job->postKerja->perusahaan->nama ?? 'Perusahaan' }}</p>
-                            </div>
+                                <p class="mb-0 text-gray-900 fw-semibold">{{ $job->postKerja->title }}</p>
+                                <p class="mb-0 text-muted small"><i class="bi bi-building me-1"></i>{{ $job->postKerja->perusahaan->nama ?? 'Perusahaan' }}</p>
+                            </div>  
                         @empty
                             <p class="text-gray-500 text-sm">Belum ada job yang kamu apply.</p>
                         @endforelse
@@ -77,11 +77,21 @@
                     </div>
                     <div class="card-body">
                         @forelse($upcomingTests as $test)
-                            <div class="mb-3 text-sm">
-                                <p class="font-bold text-orange-600">📁 {{ $test->postKerja->perusahaan->nama ?? '-' }}</p>
-                                <p>📝 {{ $test->tipe }}</p>
-                                <p>💻 {{ $test->metode }}</p>
-                                <p class="text-purple-600 text-xs mt-1">📅 {{ \Carbon\Carbon::parse($test->jadwal)->format('d F Y | H:i') }} WIB</p>
+                            <div class="mb-3 text-sm d-flex gap-2">
+                                <div>
+                                    <p class="fw-semibold text-orange-600 mb-1">
+                                        <i class="bi bi-building me-1"></i>{{ $test->postKerja->user->company->profile->full_name ?? '-' }}
+                                    </p>
+                                    <p class="mb-1">
+                                        <i class="bi bi-pencil-square me-1 text-secondary"></i>{{ $test->tipe }}
+                                    </p>
+                                    <p class="mb-1">
+                                        <i class="bi bi-laptop me-1 text-secondary"></i>{{ $test->metode }}
+                                    </p>
+                                    <p class="text-purple-600 text-xs mt-1">
+                                        <i class="bi bi-clock me-1"></i>{{ \Carbon\Carbon::parse($test->jadwal)->format('d F Y | H:i') }} WIB
+                                    </p>
+                                </div>
                             </div>
                             <hr class="my-2">
                         @empty

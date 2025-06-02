@@ -9,7 +9,17 @@ class Lamaran extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'post_kerjas_id', 'status', 'tanggal_interview', 'link_meet','score'];
+    protected $fillable = [
+        'user_id',
+        'post_kerjas_id',
+        'status',
+        'tanggal_interview',
+        'link_meet',
+        'score',
+        'resume_path',
+        'application_letter_path', // <--- tambahkan ini
+    ];
+
 
     public function user()
     {
