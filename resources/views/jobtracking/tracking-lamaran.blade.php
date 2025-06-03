@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 fw-bold text-dark">{{ __('Daftar Lamaran Saya') }}</h2>
+        <h2 class="h4 fw-bold text-dark">{{ __('My Job Applications') }}</h2>
     </x-slot>
 
     @push('styles')
@@ -13,7 +13,7 @@
                 <div class="card-body">
 
                     @if ($lamarans->isEmpty())
-                        <div class="alert alert-info text-center mb-0">Belum ada lamaran yang diajukan.</div>
+                        <div class="alert alert-info text-center mb-0">No job applications submitted yet.</div>
                     @else
                         @php
                             function statusBadge($status) {
@@ -28,7 +28,7 @@
                             function stageBadge($stage) {
                                 return $stage
                                     ? '<i class="bi bi-check-circle text-success me-1"></i><strong>' . $stage . '</strong>'
-                                    : '<span class="text-muted">Belum masuk tahap seleksi</span>';
+                                    : '<span class="text-muted">Not yet in selection stage</span>';
                             }
                         @endphp
 
@@ -37,11 +37,11 @@
                                 <thead class="table-light text-uppercase text-secondary small">
                                     <tr>
                                         <th>#</th>
-                                        <th>Posisi</th>
-                                        <th>Perusahaan</th>
-                                        <th>Tanggal Melamar</th>
+                                        <th>Position</th>
+                                        <th>Company</th>
+                                        <th>Applied Date</th>
                                         <th>Status</th>
-                                        <th>Tahap Seleksi</th>
+                                        <th>Selection Stage</th>
                                     </tr>
                                 </thead>
                                 <tbody>

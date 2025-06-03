@@ -4,34 +4,36 @@
         $circumference = 2 * pi() * $radius;
         $offset = $circumference - ($circumference * $profileCompletion / 100);
     @endphp
+
     <x-slot name="header">
         <div class="flex justify-between items-center mb-3">
-            <h1 class="text-2xl font-bold">Halo, {{ $user->name }}!</h1>
+            <h1 class="text-2xl font-bold">Hello, {{ $user->name }}!</h1>
         </div>
     </x-slot>
+
     <div class="container my-4">
         <div class="row g-4">
             <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">
-                        Kelengkapan Profile
+                        Profile Completion
                     </div>
                     <div class="card-body d-flex justify-content-between align-items-center">
-                        <!-- Bagian kiri -->
+                        <!-- Left Section -->
                         <div>
                             <h6 class="card-title mb-2">
                                 <img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="icon" width="20" class="me-2">
-                                Tugas yang belum selesai :
+                                Incomplete Tasks:
                             </h6>
                             <ul class="mb-3">
-                                <li>Tambahkan No. handphone</li>
-                                <li>Tambahkan Alamat</li>
-                                <li>Tambahkan Bio</li>
+                                <li>Add phone number</li>
+                                <li>Add address</li>
+                                <li>Add bio</li>
                             </ul>
-                            <a href="#" class="btn btn-sm btn-primary">Lengkapi Sekarang</a>
+                            <a href="#" class="btn btn-sm btn-primary">Complete Now</a>
                         </div>
 
-                        <!-- Bagian kanan (circular progress) -->
+                        <!-- Right Section (circular progress) -->
                         <div class="text-center">
                             <svg width="100" height="100">
                                 <!-- Background circle -->
@@ -49,31 +51,32 @@
                                     {{ $profileCompletion }}%
                                 </text>
                             </svg>
-                        <small class="text-muted d-block">Profile Complete</small>
-                    </div>
-
+                            <small class="text-muted d-block">Profile Complete</small>
+                        </div>
                     </div>
                 </div>
+
                 <div class="card mt-4">
                     <div class="card-header">
-                        Recent Apply Job
+                        Recently Applied Jobs
                     </div>
                     <div class="card-body">
                         @forelse($recentJobs as $job)
                             <div class="mb-3">
                                 <p class="mb-0 text-gray-900 fw-semibold">{{ $job->postKerja->title }}</p>
-                                <p class="mb-0 text-muted small"><i class="bi bi-building me-1"></i>{{ $job->postKerja->perusahaan->nama ?? 'Perusahaan' }}</p>
+                                <p class="mb-0 text-muted small"><i class="bi bi-building me-1"></i>{{ $job->postKerja->perusahaan->nama ?? 'Company' }}</p>
                             </div>  
                         @empty
-                            <p class="text-gray-500 text-sm">Belum ada job yang kamu apply.</p>
+                            <p class="text-gray-500 text-sm">You haven't applied to any jobs yet.</p>
                         @endforelse
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
-                        Featured
+                        Upcoming Selection
                     </div>
                     <div class="card-body">
                         @forelse($upcomingTests as $test)
@@ -95,7 +98,7 @@
                             </div>
                             <hr class="my-2">
                         @empty
-                            <p class="text-gray-500 text-sm">Belum ada jadwal interview atau test.</p>
+                            <p class="text-gray-500 text-sm">No upcoming interviews or tests scheduled.</p>
                         @endforelse
                     </div>
                 </div>

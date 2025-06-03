@@ -31,12 +31,49 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
                             <ul class="navbar-nav ms-auto">
                                 @auth
+                                    <li class="nav-item dropdown me-3">
+                                        <a class="nav-link text-white position-relative" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-bell fs-5"></i>
+                                            @if(count($notifications ?? []) > 0)
+                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                    {{ count($notifications) }}
+                                                </span>
+                                            @endif
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow p-2" aria-labelledby="notifDropdown" style="width: 320px; max-height: 350px; overflow-y: auto;">
+                                            <li class="dropdown-header fw-semibold text-dark">Notifikasi</li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            @forelse($notifications as $notif)
+                                                @php 
+                                                    $post = $notif->post ?? $notif->postKerja; 
+                                                    $status = strtolower($notif->status);
+                                                    $statusColor = match($status) {
+                                                        'pending' => 'warning',
+                                                        'on_screening' => 'primary',
+                                                        'rejected' => 'danger',
+                                                        'scheduled' => 'success',
+                                                        default => 'secondary',
+                                                    };
+                                                @endphp
+                                                <li>
+                                                    <a class="dropdown-item d-flex justify-content-between align-items-start gap-2 py-2" href="#">
+                                                        <div>
+                                                            <i class="bi bi-bell-fill text-{{ $statusColor }}"></i>
+                                                            <span class="text-dark">Lamaran ke <strong>{{ $post->title ?? $post->judul }}</strong></span>
+                                                            <div>
+                                                                <span class="badge bg-{{ $statusColor }} mt-1 text-uppercase small">{{ $notif->status }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            @empty
+                                                <li><span class="dropdown-item text-muted">Tidak ada notifikasi</span></li>
+                                            @endforelse
+                                        </ul>
+                                    </li>
+
+                                    <!-- Dropdown User -->
                                     <li class="nav-item dropdown">
-                                        <li class="nav-item">
-                                            <a href="#" class="nav-link text-white position-relative">
-                                                <i class="bi bi-bell-fill fs-5"></i> {{-- Bootstrap Icons --}}
-                                            </a>
-                                        </li>
                                         <a class="nav-link dropdown-toggle text-white d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                                             @php
                                                 $user = Auth::user();
@@ -45,34 +82,22 @@
                                                     : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
                                             @endphp
                                             <img src="{{ $avatar }}" alt="Avatar" class="rounded-circle" width="32" height="32">
-                                            <span>{{ $user->name }}</span>
+                                            <span class="fw-semibold">{{ $user->name }}</span>
                                         </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a class="dropdown-item" href="{{ route('home') }}">Home</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('setting.edit') }}">Setting</a></li>
-                                            
+                                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                                            <li><a class="dropdown-item" href="{{ route('home') }}"><i class="bi bi-house-door me-2"></i>Home</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('setting.edit') }}"><i class="bi bi-gear me-2"></i>Setting</a></li>
                                             <li>
                                                 <form method="POST" action="{{ route('logout') }}">
                                                     @csrf 
-                                                    <button class="dropdown-item">Logout</button>
+                                                    <button class="dropdown-item"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
                                                 </form>
                                             </li>
                                         </ul>
                                     </li>
-                                @else
-                                    <ul class="navbar-nav ms-auto d-flex align-items-center gap-2">
-                                        <li class="nav-item">
-                                            <a class="btn btn-outline-light btn-sm" href="{{ route('register.perusahaan') }}">Untuk Perusahaan</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-white" href="{{ route('register') }}">Register</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
-                                        </li>
-                                    </ul>
+
                                 @endauth
+
                             </ul>
                         </div>
                     </div>

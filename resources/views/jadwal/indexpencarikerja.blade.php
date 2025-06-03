@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-left mb-6" style="font-family: 'Roboto', sans-serif; font-size: 30px;">
-            {{ __('Jadwal Interview') }}
+            {{ __('Interview Schedule') }}
         </h2>
     </x-slot>
 
@@ -116,12 +116,12 @@
         </div>
 
         <div class="calendar-grid" id="calendar-grid">
-            {{-- Kosongkan cell sampai tanggal 1 --}}
+            {{-- Empty cells before the 1st --}}
             @for ($i = 0; $i < $startDay; $i++)
                 <div class="day-cell disabled"></div>
             @endfor
 
-            {{-- Isi tanggal dan event --}}
+            {{-- Fill in the days with events --}}
             @for ($day = 1; $day <= $totalDays; $day++)
                 @php
                     $dateStr = \Carbon\Carbon::create($year, $month, $day)->format('Y-m-d');
@@ -139,7 +139,7 @@
                         </span>
                         @if ($eventCount > 1)
                             <div class="mt-1 text-primary small" style="cursor: pointer;" onclick="showDetails('{{ $dateStr }}')">
-                                +{{ $eventCount - 1 }} lainnya
+                                +{{ $eventCount - 1 }} more
                             </div>
                         @endif
                     @endif
@@ -148,7 +148,7 @@
         </div>
     </div>
 
-    <!-- Modal untuk detail jadwal -->
+    <!-- Modal for schedule details -->
     <div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -198,7 +198,7 @@
 
                     if (todayEvents.length > 1) {
                         const extraCount = todayEvents.length - 1;
-                        cell.innerHTML += `<div class="mt-1 text-primary small" style="cursor:pointer;" onclick="showDetails('${dateStr}')">+${extraCount} lainnya</div>`;
+                        cell.innerHTML += `<div class="mt-1 text-primary small" style="cursor:pointer;" onclick="showDetails('${dateStr}')">+${extraCount} more</div>`;
                     }
                 }
 
@@ -209,7 +209,7 @@
 
         function showDetails(date) {
             const selectedEvents = events.filter(event => event.date === date);
-            document.getElementById('modalDate').innerText = 'Jadwal untuk: ' + date;
+            document.getElementById('modalDate').innerText = 'Schedule for: ' + date;
 
             let eventList = '';
 
@@ -222,7 +222,7 @@
                                 <p class="text-muted mb-3">${event.time}</p>
                                 <p class="mb-2 d-flex align-items-center">
                                     <i class="bi bi-link-45deg me-2"></i>
-                                    <a href="${event.link}" target="_blank" class="text-decoration-underline text-primary small">Link Interview</a>
+                                    <a href="${event.link}" target="_blank" class="text-decoration-underline text-primary small">Interview Link</a>
                                 </p>
                                 <p class="mb-3 d-flex align-items-center">
                                     <span class="me-2 rounded-circle bg-danger" style="width: 10px; height: 10px;"></span>

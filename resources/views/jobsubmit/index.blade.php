@@ -46,7 +46,7 @@
         <script>
             Swal.fire({
                 icon: 'success',
-                title: 'Berhasil!',
+                title: 'Success!',
                 text: '{{ session('success') }}',
                 confirmButtonColor: '#3085d6'
             });
@@ -61,45 +61,44 @@
         </x-slot>
         
         <!-- Modal Submit Job -->
-        <!-- Modal Submit Job -->
 <div class="modal fade" id="submitJobModal" tabindex="-1" aria-labelledby="submitJobModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form action="{{ route('job.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="submitJobModalLabel">Posting Lowongan Pekerjaan</h5>
+                    <h5 class="modal-title" id="submitJobModalLabel">Post a Job Vacancy</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="title" class="form-label">Judul Pekerjaan</label>
+                            <label for="title" class="form-label">Job Title</label>
                             <input type="text" class="form-control" id="title" name="title" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="location" class="form-label">Lokasi</label>
+                            <label for="location" class="form-label">Location</label>
                             <input type="text" name="location" class="form-control">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Gaji Minimum (Opsional)</label>
-                            <input type="number" class="form-control" name="salary_min" placeholder="Contoh: 5000000">
+                            <label class="form-label">Minimum Salary (Optional)</label>
+                            <input type="number" class="form-control" name="salary_min" placeholder="Example: 5000000">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Gaji Maksimum (Opsional)</label>
-                            <input type="number" class="form-control" name="salary_max" placeholder="Contoh: 10000000">
+                            <label class="form-label">Maximum Salary (Optional)</label>
+                            <input type="number" class="form-control" name="salary_max" placeholder="Example: 10000000">
                         </div>
 
                         <div class="col-md-6">
-                            <label for="experience" class="form-label">Pengalaman</label>
+                            <label for="experience" class="form-label">Experience</label>
                             <input type="text" name="experience" class="form-control">
                         </div>
                         <div class="col-md-6">
-                            <label for="job_type" class="form-label">Tipe Pekerjaan</label>
+                            <label for="job_type" class="form-label">Job Type</label>
                             <select name="job_type" class="form-select">
-                                <option value="">Pilih Tipe</option>
+                                <option value="">Select Type</option>
                                 <option value="Full-Time">Full-Time</option>
                                 <option value="Part-Time">Part-Time</option>
                                 <option value="Remote">Remote</option>
@@ -108,17 +107,17 @@
                         </div>
 
                         <div class="col-md-12">
-                            <label for="description" class="form-label">Deskripsi Pekerjaan</label>
+                            <label for="description" class="form-label">Job Description</label>
                             <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="deadline" class="form-label">Deadline Lamaran</label>
+                            <label for="deadline" class="form-label">Application Deadline</label>
                             <input type="date" name="deadline" class="form-control">
                         </div>
 
                         <div class="col-md-6">
-                            <label for="category_id" class="form-label">Kategori</label>
+                            <label for="category_id" class="form-label">Category</label>
                             <select class="form-select" name="category_id" required>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -129,10 +128,10 @@
                         </div>
 
                         <div class="col-md-12">
-                            <label for="skills" class="form-label">Skill yang Dibutuhkan</label>
+                            <label for="skills" class="form-label">Required Skills</label>
                             <div class="d-flex align-items-center mb-2">
                                 <i class="fas fa-search me-2"></i>
-                                <input type="text" id="skill-input" class="form-control" placeholder="Contoh: PHP, Laravel..." autocomplete="off">
+                                <input type="text" id="skill-input" class="form-control" placeholder="Example: PHP, Laravel..." autocomplete="off">
                             </div>
 
                             <div id="skill-tags" class="skill-tags mb-2">
@@ -154,18 +153,18 @@
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label">Tahapan Seleksi</label>
+                            <label class="form-label">Selection Stages</label>
                             <div id="selection-stages-container">
                                 <div class="input-group mb-2">
-                                    <input type="text" name="selection_stages[0][name]" class="form-control" placeholder="Contoh: CV Screening">
+                                    <input type="text" name="selection_stages[0][name]" class="form-control" placeholder="Example: CV Screening">
                                     <button class="btn btn-danger remove-stage" type="button">×</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-selection-stage">+ Tambah Tahapan</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-selection-stage">+ Add Stage</button>
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label">Metode Seleksi:</label>
+                            <label class="form-label">Selection Methods:</label>
                             <div class="row">
                                 @foreach ($selectionMethods as $method)
                                     <div class="col-md-4">
@@ -181,8 +180,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Posting Pekerjaan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Post Job</button>
                 </div>
             </form>
         </div>
@@ -191,7 +190,7 @@
 
     
     @php
-        $activeTab = request('tab', 'active'); // Ambil dari query string, default 'active'
+        $activeTab = request('tab', 'active'); // Get from query string, default 'active'
     @endphp
     <div class="d-flex justify-content-between align-items-center mb-3">
         <ul class="nav nav-tabs" role="tablist">
@@ -221,18 +220,18 @@
     @endphp
 
     @if ($filteredJobs->isEmpty())
-        <p class="text-muted">Tidak ada job untuk tab ini.</p>
+        <p class="text-muted">No jobs available for this tab.</p>
     @else
         <table class="table align-middle">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Judul</th>
-                    <th>Lokasi</th>
+                    <th>Title</th>
+                    <th>Location</th>
                     <th>Deadline</th>
-                    <th>Gaji</th>
+                    <th>Salary</th>
                     <th>Status</th>
-                    <th>Aksi</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -253,7 +252,7 @@
                             <a href="{{ route('job.edit', $job->id) }}" class="btn btn-sm btn-outline-secondary me-1">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <form action="{{ route('job.destroy', $job->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Yakin ingin menghapus pekerjaan ini?');">
+                            <form action="{{ route('job.destroy', $job->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this job?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-secondary me-1">
@@ -268,7 +267,7 @@
     @endif
 </div>
 
-    <!-- JavaScript untuk Modal -->
+    <!-- JavaScript for Modal -->
     <script>
         const openModalBtn = document.getElementById("openModal");
         const closeModalBtn = document.getElementById("closeModalBtn");
@@ -292,7 +291,7 @@
             inputGroup.classList.add('input-group', 'mb-2');
 
             inputGroup.innerHTML = `
-                <input type="text" name="selection_stages[${stageIndex}][name]" class="form-control" placeholder="Contoh: Interview">
+                <input type="text" name="selection_stages[${stageIndex}][name]" class="form-control" placeholder="Example: Technical Interview">
                 <button class="btn btn-danger remove-stage" type="button">×</button>
             `;
 
@@ -300,55 +299,47 @@
             stageIndex++;
         });
 
-        document.addEventListener('click', function (e) {
-            if (e.target && e.target.classList.contains('remove-stage')) {
-                e.target.closest('.input-group').remove();
+        // Remove stage input group on click
+        document.getElementById('selection-stages-container').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-stage')) {
+                e.target.parentElement.remove();
             }
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
+        // Skills tags input logic
         const skillInput = document.getElementById('skill-input');
         const skillTags = document.getElementById('skill-tags');
-        const hiddenSkills = document.getElementById('skills-hidden');
+        const skillsHiddenInput = document.getElementById('skills-hidden');
 
-        let skills = JSON.parse(hiddenSkills.value || '[]');
-
-        function renderSkills() {
-            skillTags.innerHTML = '';
-            skills.forEach(skill => {
-                const badge = document.createElement('span');
-                badge.className = 'badge bg-primary me-1 mb-1 skill-badge';
-                badge.innerHTML = `${skill} <i class="remove-skill ms-1" style="cursor:pointer;" data-skill="${skill}">&times;</i>`;
-                skillTags.appendChild(badge);
-            });
-            hiddenSkills.value = JSON.stringify(skills);
+        function updateSkillsHiddenInput() {
+            const skills = Array.from(skillTags.querySelectorAll('.skill-badge')).map(span => span.firstChild.textContent.trim());
+            skillsHiddenInput.value = JSON.stringify(skills);
         }
 
-        skillInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
+        skillInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && skillInput.value.trim() !== '') {
                 e.preventDefault();
-                const value = skillInput.value.trim();
-                if (value && !skills.includes(value)) {
-                    skills.push(value);
-                    renderSkills();
+                const skillValue = skillInput.value.trim();
+
+                // Prevent duplicates
+                const existingSkills = Array.from(skillTags.querySelectorAll('.skill-badge')).map(span => span.textContent.trim());
+                if (!existingSkills.includes(skillValue)) {
+                    const span = document.createElement('span');
+                    span.classList.add('badge', 'bg-primary', 'me-1', 'mb-1', 'skill-badge');
+                    span.innerHTML = `${skillValue} <i class="remove-skill ms-1" style="cursor:pointer;">&times;</i>`;
+                    skillTags.appendChild(span);
+                    updateSkillsHiddenInput();
+                    skillInput.value = '';
                 }
-                skillInput.value = '';
             }
         });
 
         skillTags.addEventListener('click', function (e) {
             if (e.target.classList.contains('remove-skill')) {
-                const skillToRemove = e.target.getAttribute('data-skill');
-                skills = skills.filter(s => s !== skillToRemove);
-                renderSkills();
+                e.target.parentElement.remove();
+                updateSkillsHiddenInput();
             }
         });
-
-        renderSkills();
-    });
     </script>
-
-
-    <!-- Alpine.js -->
-    <script src="//unpkg.com/alpinejs" defer></script>
+</div>
 </x-app-layout>
