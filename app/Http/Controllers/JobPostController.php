@@ -308,16 +308,7 @@ class JobPostController extends Controller
     public function candidate(Request $request)
     {
         $jobs = PostKerja::all();
-
         $selectedJob = null;
-        if ($request->has('job_id')) {
-            $selectedJob = PostKerja::with('lamarans.user')->find($request->job_id);
-
-            if ($selectedJob) {
-                $selectionMethods = $selectedJob->selection_methods ?? [];
-            }
-        }
-
         $interviews = collect();
         $selectiontemplate = collect();
         $pendingCount = 0;
@@ -325,16 +316,52 @@ class JobPostController extends Controller
         $rejectedCount = 0;
         $shortlistCount = 0;
 
-        if ($selectedJob) {
-            $interviews = Interview::where('post_kerjas_id', $selectedJob->id)->get()->groupBy('user_id');
-            $selectiontemplate = SelectionTemplate::where('post_kerjas_id', $selectedJob->id)->get();
-            $pendingCount = $selectedJob->lamarans()->where('status', 'pending')->count();
-            $acceptedCount = $selectedJob->lamarans()->where('status', 'accepted')->count();
-            $rejectedCount = $selectedJob->lamarans()->where('status', 'Rejected')->count();
-            $shortlistCount = $selectedJob->lamarans()->whereNotIn('status', ['pending', 'accepted', 'Rejected'])->count();
+        if ($request->has('job_id')) {
+            $selectedJob = PostKerja::with('lamarans.user')->find($request->job_id);
+
+            if ($selectedJob) {
+                // Get all lamarans for the selected job first
+                $lamaransQuery = $selectedJob->lamarans();
+
+                // Apply sorting based on request input
+                $sortBy = $request->query('sort_by', 'newest'); // Default to 'newest'
+
+                switch ($sortBy) {
+                    case 'oldest':
+                        $lamaransQuery->oldest();
+                        break;
+                    case 'highest_score':
+                        $lamaransQuery->orderByDesc('score'); // Assuming 'score' is a column on lamarans table
+                        break;
+                    case 'newest':
+                    default:
+                        $lamaransQuery->latest(); // Order by 'created_at' DESC
+                        break;
+                }
+
+                $selectedJob->setRelation('lamarans', $lamaransQuery->get()); // Set the sorted lamarans back to the relationship
+
+
+                $interviews = Interview::where('post_kerjas_id', $selectedJob->id)->get()->groupBy('user_id');
+                $selectiontemplate = SelectionTemplate::where('post_kerjas_id', $selectedJob->id)->get();
+
+                $pendingCount = $selectedJob->lamarans()->where('status', 'pending')->count();
+                $acceptedCount = $selectedJob->lamarans()->where('status', 'accepted')->count();
+                $rejectedCount = $selectedJob->lamarans()->where('status', 'Rejected')->count();
+                $shortlistCount = $selectedJob->lamarans()->whereNotIn('status', ['pending', 'accepted', 'Rejected'])->count();
+            }
         }
 
-        return view('jobsubmit.candidate', compact('jobs', 'selectedJob', 'interviews','selectiontemplate', 'pendingCount', 'acceptedCount', 'rejectedCount', 'shortlistCount'));
+        return view('jobsubmit.candidate', compact(
+            'jobs',
+            'selectedJob',
+            'interviews',
+            'selectiontemplate',
+            'pendingCount',
+            'acceptedCount',
+            'rejectedCount',
+            'shortlistCount'
+        ));
     }
 
     public function destroy($id)

@@ -37,7 +37,7 @@
                 <form method="GET" id="sortForm">
                     <select class="form-select" name="sort" onchange="document.getElementById('sortForm').submit()">
                         <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Sort by Default</option>
-                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Terbaru</option>
+                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
                         <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Populer</option>
                         <option value="me" {{ request('sort') == 'me' ? 'selected' : '' }}>Posted by Me</option>
                     </select>

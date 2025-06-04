@@ -30,7 +30,7 @@
                                 <li>Add address</li>
                                 <li>Add bio</li>
                             </ul>
-                            <a href="#" class="btn btn-sm btn-primary">Complete Now</a>
+                            <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-primary">Complete Now</a>
                         </div>
 
                         <!-- Right Section (circular progress) -->

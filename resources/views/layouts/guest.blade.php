@@ -75,9 +75,9 @@
 </head>
 <body>
     <!-- Background Elements -->
-    <img src="{{ asset('images/ruang-talenta-img-1.png') }}" alt="Logo Ruang Talenta" class="background-element logo" />
-    <img src="{{ asset('images/rubiks-cube.png') }}" alt="Kubus Kanan Atas" class="background-element cube-top-right" />
-    <img src="{{ asset('images/cube-of-square-blocks.png') }}" alt="Kubus Kiri Bawah" class="background-element cube-bottom-left" />
+    <img src="{{ asset('images/ruang-talenta-img-1.png') }}" alt="Ruang Talenta Logo" class="background-element logo" />
+    <img src="{{ asset('images/rubiks-cube.png') }}" alt="Top Right Cube" class="background-element cube-top-right" />
+    <img src="{{ asset('images/cube-of-square-blocks.png') }}" alt="Bottom Left Cube" class="background-element cube-bottom-left" />
 
     <!-- Page Content -->
     <div class="d-flex justify-content-center align-items-center vh-100 content">
@@ -85,7 +85,7 @@
             <h4 class="fw-bold mb-0 fs-4">Welcome to</h4>
             <h2 class="fw-bold text-primary fs-3 mb-3">Ruang Talenta</h2>
 
-            <p class="text-muted small mb-4">Daftar sekarang dan mulai perjalananmu bersama kami!</p>
+            <p class="text-muted small mb-4">Register now and start your journey with us!</p>
 
             {{ $slot }}
             
@@ -101,7 +101,7 @@
             </div>
 
             <p class="small text-muted">
-                Sudah punya akun? <a href="#" class="text-decoration-none text-primary fw-semibold">Masuk</a>
+                Already have an account? <a href="#" class="text-decoration-none text-primary fw-semibold">Sign in</a>
             </p>
         </div>
     </div>

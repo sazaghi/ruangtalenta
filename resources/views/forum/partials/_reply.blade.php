@@ -22,21 +22,21 @@
         </div>
 
         <button class="btn btn-sm btn-link text-primary px-0" onclick="document.getElementById('reply-form-{{ $reply->id }}').classList.toggle('d-none')">
-            Balas
+            Reply
         </button>
 
         <form action="{{ route('post.reply', ['parent_id' => $reply->id]) }}" method="POST" class="d-none mt-3" id="reply-form-{{ $reply->id }}">
             @csrf
             <textarea name="content" class="form-control form-control-sm mb-2" rows="2" required></textarea>
             <div class="text-end">
-                <button class="btn btn-sm btn-primary">Kirim</button>
+                <button class="btn btn-sm btn-primary">Send</button>
             </div>
         </form>
 
         @if ($reply->replies->count() > 0)
         <div class="mt-3">
             <button class="btn btn-sm btn-link text-secondary px-0" onclick="document.getElementById('child-replies-{{ $reply->id }}').classList.toggle('d-none')">
-                Lihat {{ $reply->replies->count() }} balasan
+                See {{ $reply->replies->count() }} replies
             </button>
 
             <div id="child-replies-{{ $reply->id }}" class="d-none mt-3 ms-3 border-start ps-3">
