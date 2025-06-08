@@ -13,34 +13,33 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
-                <!-- Email Address -->
-                <div>
-                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="E-mail"/>
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                <div class="mb-3 text-start">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" required autofocus>
+                    @error('email')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
-                <div>
-
-                    <x-text-input id="password" class="block mt-1 w-full"
-                                    type="password"
-                                    name="password"
-                                    required autocomplete="current-password" placeholder="Password"/>
-
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                <div class="mb-3 text-start">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="password" required>
+                    @error('password')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
-                <div class="flex items-center justify-end mt-3 text-xs">
+                <div class="mb-3 text-end">
                     @if (Route::has('password.request'))
-                        <a class="underline text-sm hover:text-[#084C9B] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A66C2]" href="{{ route('password.request') }} style="color: #0A66C2;"">
-                            {{ __('Forgot your password?') }}
+                        <a href="{{ route('password.request') }}" class="text-decoration-none">
+                            Forgot your password?
                         </a>
                     @endif
                 </div>
-                <!-- Login Button -->
-                <div class="mt-3 text-center">
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
+
             
             <div class="text-muted my-3">Or</div>
 
