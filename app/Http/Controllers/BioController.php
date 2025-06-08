@@ -74,5 +74,16 @@ class BioController extends Controller
 
         return redirect()->back()->with('success', 'Education added successfully.');
     }
+    public function checkSkill(Request $request)
+    {
+        $skill = strtoupper(trim($request->query('skill')));
+        $bio = Bio::where('user_id', auth()->id())->first();
+
+        $existingSkills = $bio ? $bio->skills : [];
+
+        $exists = in_array($skill, array_map('strtoupper', $existingSkills ?? []));
+
+        return response()->json(['exists' => $exists]);
+    }
 
 }

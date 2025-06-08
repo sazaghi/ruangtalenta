@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Dashboard</title>
-        <!-- Bootstrap CSS -->
+        <link rel="icon" type="image/png" href="{{ asset('images/page_logo.png') }}">
+        
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -15,6 +16,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     
     </head>
     <body style="background-color: #F5F7FC;">

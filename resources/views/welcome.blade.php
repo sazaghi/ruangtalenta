@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ruang Talenta</title>
+  <title>Landing Page</title>
+  <link rel="icon" type="image/png" href="{{ asset('images/page_logo.png') }}">
+
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -43,28 +45,32 @@
 <section class="hero-section d-flex align-items-center">
   <div class="hero-overlay d-flex flex-row justify-content-between align-items-center w-100 px-5">
     <div class="text-start" style="max-width: 600px;">
-      <h1 class="display-5 fw-bold">Bangun Karier Impianmu di <span style="color: #222D65;">Ruang Talenta</span></h1>
-      <p class="lead mt-3">Jelajahi ribuan lowongan kerja yang sesuai dengan keahlian dan passionmu</p>
+      <h1 class="display-5 fw-bold">Build Your Dream Career in <span style="color: #222D65;">Ruang Talenta</span></h1>
+      <p class="lead mt-3">Explore thousands of job vacancies that match your skills and passion.</p>
 
-      <div class="input-group mt-4">
-        <input type="text" class="form-control rounded-start" placeholder="Posisi atau perusahaan">
-        <button class="btn btn-danger rounded-end px-4">Cari</button>
-      </div>
+      <form action="{{ route('job.show') }}" method="GET">
+        <div class="input-group mt-4">
+          <input type="text" name="keyword" class="form-control rounded-start" placeholder="Position or company">
+          <button type="submit" class="btn btn-danger rounded-end px-4">Find</button>
+        </div>
+      </form>
+
 
       <div class="d-flex mt-5 gap-5 text-white">
         <div class="stat-box">
-          <h3>10K+</h3>
+          <h3>{{ number_format($totalJobs) }}+</h3>
           <p>Lowongan Tersedia</p>
         </div>
         <div class="stat-box">
-          <h3>1K+</h3>
+          <h3>{{ number_format($totalCompanies) }}+</h3>
           <p>Perusahaan</p>
         </div>
         <div class="stat-box">
-          <h3>3K+</h3>
+          <h3>{{ number_format($totalPosts) }}+</h3>
           <p>Blog & Forum</p>
         </div>
       </div>
+      
     </div>
   </div>
 </section>
@@ -159,46 +165,46 @@
     </div>
   </div>
 </section>
-
-<!-- Modal Apply -->
-<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form id="applyForm" action="{{ route('job.apply', $job->id) }}" method="POST" enctype="multipart/form-data">
-      @csrf
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Lengkapi Berkas</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="job_id" id="modalJobId">
-
-          <!-- Resume Upload -->
-          <div id="resumeSection" class="mb-3 d-none">
-            <label class="form-label">Unggah Resume (PDF)</label>
-            <input type="file" name="resume_file" accept="application/pdf" class="form-control">
+@if(isset($job))
+  <!-- Modal Apply -->
+  <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="applyForm" action="{{ route('job.apply', $job->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Lengkapi Berkas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
           </div>
+          <div class="modal-body">
+            <input type="hidden" name="job_id" id="modalJobId">
 
-          <!-- Application Letter Upload -->
-          <div id="letterSection" class="mb-3 d-none">
-            <label class="form-label">Unggah Application Letter (PDF)</label>
-            <input type="file" name="application_letter_file" accept="application/pdf" class="form-control">
+            <!-- Resume Upload -->
+            <div id="resumeSection" class="mb-3 d-none">
+              <label class="form-label">Unggah Resume (PDF)</label>
+              <input type="file" name="resume_file" accept="application/pdf" class="form-control">
+            </div>
+
+            <!-- Application Letter Upload -->
+            <div id="letterSection" class="mb-3 d-none">
+              <label class="form-label">Unggah Application Letter (PDF)</label>
+              <input type="file" name="application_letter_file" accept="application/pdf" class="form-control">
+            </div>
+
+            <!-- Portofolio Link -->
+            <div id="portofolioSection" class="mb-3 d-none">
+              <label class="form-label">Tautan Portofolio (URL)</label>
+              <input type="url" name="portofolio_link" class="form-control" placeholder="https://portofolio.com/nama-anda">
+            </div>
           </div>
-
-          <!-- Portofolio Link -->
-          <div id="portofolioSection" class="mb-3 d-none">
-            <label class="form-label">Tautan Portofolio (URL)</label>
-            <input type="url" name="portofolio_link" class="form-control" placeholder="https://portofolio.com/nama-anda">
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Kirim Lamaran</button>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Kirim Lamaran</button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
-
+@endif
 
 <!-- Footer -->
 <footer class="text-white mt-5 pt-4 pb-3" style="background-color: #222D65;">
@@ -215,10 +221,10 @@
       <div class="col-md-4 mb-4">
         <h6 class="fw-bold mb-3">Menu</h6>
         <ul class="list-unstyled">
-          <li><a href="#" class="text-white text-decoration-none">Home</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Find a Job</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Dashboard</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Forum & Community</a></li>
+          <li><a href="{{ route('home') }}" class="text-white text-decoration-none">Home</a></li>
+          <li><a href="{{ route('job.show') }}" class="text-white text-decoration-none">Find a Job</a></li>
+          <li><a href="{{ route('dashboard') }}" class="text-white text-decoration-none">Dashboard</a></li>
+          <li><a href="{{ route('post.index') }}" class="text-white text-decoration-none">Forum & Community</a></li>
         </ul>
       </div>
 

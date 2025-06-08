@@ -16,6 +16,8 @@ use App\Http\Controllers\WorkExperienceController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
 use App\Models\PostKerja;
+use App\Models\User;
+use App\Models\Post;
 
 
 use Illuminate\Support\Facades\Route;
@@ -31,7 +33,10 @@ Route::get('/', function () {
         asset('images/Category5.png'),
         asset('images/Category6.png'),
     ];
-    return view('welcome', compact('jobs', 'categories', 'categoryImages'));
+    $totalJobs = PostKerja::count();
+    $totalCompanies = \App\Models\User::role('perusahaan')->count();
+    $totalPosts = Post::count();
+    return view('welcome', compact('jobs', 'categories', 'categoryImages', 'totalJobs', 'totalCompanies', 'totalPosts'));
 })->name('home');
 
 Route::get('/register-perusahaan', [RegisteredUserController::class, 'perusahaanregister'])->name('register.perusahaan');
@@ -86,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::post('/bio/education', [BioController::class, 'storeEducation'])->name('bio.education.store');
+    Route::get('/check-skill', [BioController::class, 'checkSkill'])->name('check.skill');
 
     Route::get('/calendar', [InterviewController::class, 'showCalendar'])->name('calendar');
     Route::get('/userCalendar', [InterviewController::class, 'userShowCalendar'])->name('calendar.user');

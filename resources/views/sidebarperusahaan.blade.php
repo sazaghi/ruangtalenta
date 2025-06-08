@@ -27,7 +27,45 @@
         }
 
         #main-content.expanded {
-            margin-left: 205px;
+            margin-left: 200px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebar.expanded .profile-img {
+            width: 80px;
+            height: 80px;
+        }
+
+        #sidebar .nav-link {
+            transition: background-color 0.2s ease;
+        }
+
+        #sidebar .nav-link:hover {
+            background-color: #e2e6ea;
+            border-radius: 0.375rem;
+        }
+
+        #sidebar .nav-link.active {
+            background-color: #ced4da;
+            font-weight: 500;
+            border-radius: 0.375rem;
+        }
+
+        #sidebarLogo img {
+            transition: transform 0.3s ease;
+        }
+
+        #sidebar.expanded #sidebarLogo img {
+            transform: scale(1.1);
+        }
+
+        .sidebar-hidden {
+            display: none !important;
         }
     </style>
 </head>
@@ -37,7 +75,12 @@
     <!-- Sidebar -->
     <div id="sidebar" class="bg-light vh-100 position-fixed p-3 d-flex flex-column align-items-center">
         <!-- Toggle Button -->
-        <button id="toggleSidebar" class="btn btn-outline-secondary w-100 mb-4">☰</button>
+        <button id="toggleSidebar" class="btn w-100 mb-4">☰</button>
+
+        <!-- Logo -->
+        <div id="sidebarLogo" class="mb-4 sidebar-hidden w-100 text-center">
+            <img src="{{ asset('images/ruang-talenta-img-1.png') }}" alt="Logo" style="max-width: 100px;">
+        </div>
 
         <!-- Profile -->
         <div class="text-center w-100">
@@ -45,15 +88,12 @@
                 ? Storage::url(auth()->user()->profile->avatar) 
                 : asset('images/default-avatar.png') }}" 
                 id="profileImage"
-                class="rounded-circle border border-secondary d-block mx-auto"
-                style="width: 40px; height: 40px; transition: all 0.3s;">
+                class="rounded-circle border border-secondary d-block mx-auto profile-img">
 
-            <div id="profileDetails" class="mt-2 text-center d-none">
+            <div id="profileDetails" class="mt-2 text-center sidebar-hidden">
                 <h6 class="mb-0 fs-6">{{ Auth::user()->name }}</h6>
-                <span class="text-success small">● Online</span>
             </div>
         </div>
-
 
         <!-- Menu -->
         <ul class="nav flex-column mt-4 w-100">
@@ -78,17 +118,17 @@
             <li class="nav-item mb-2">
                 <a href="{{ route('job.store') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-briefcase me-2"></i>
-                    <span class="menu-label d-none">Submit Job</span>
+                    <span class="menu-label d-none">Jobs</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
                 <a href="{{ route('job.candidate') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-person-workspace me-2"></i>
-                    <span class="menu-label d-none">Kandidat</span>
+                    <span class="menu-label d-none">Candidate</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="{{ route('job.tracking') }}" class="nav-link text-dark d-flex align-items-center">
+                <a href="{{ route('logout') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-door-closed me-2"></i>
                     <span class="menu-label d-none">Logout</span>
                 </a>
@@ -98,7 +138,7 @@
 
     <!-- Main Content -->
     <div id="main-content" class="p-4 flex-grow-1">
-        <!-- Kosongin aja, nanti diisi dari blade pakai slot -->
+        <!-- Konten dinamis -->
     </div>
 </div>
 
@@ -115,30 +155,41 @@
             sidebar.classList.remove("expanded");
             mainContent.classList.remove("expanded");
 
-            // Hide labels & profile
-            document.querySelectorAll(".menu-label, #profileDetails").forEach(el => {
-                el.classList.add("d-none");
+            document.querySelectorAll(".menu-label, #profileDetails, #sidebarLogo").forEach(el => {
+                el.classList.add("sidebar-hidden");
             });
+
+            toggleBtn.classList.remove("d-none");
         } else {
             sidebar.classList.add("expanded");
             mainContent.classList.add("expanded");
 
-            // Show labels & profile
-            document.querySelectorAll(".menu-label, #profileDetails").forEach(el => {
-                el.classList.remove("d-none");
+            document.querySelectorAll(".menu-label, #profileDetails, #sidebarLogo").forEach(el => {
+                el.classList.remove("sidebar-hidden");
             });
+
+            toggleBtn.classList.add("d-none");
         }
     }
 
     toggleBtn.addEventListener("click", toggleSidebar);
-    
+
     document.addEventListener("click", (e) => {
         const clickedInsideSidebar = sidebar.contains(e.target);
         const clickedToggle = toggleBtn.contains(e.target);
 
         if (!clickedInsideSidebar && !clickedToggle && sidebar.classList.contains("expanded")) {
-            toggleSidebar(true); // Force close
+            toggleSidebar();
         }
+    });
+
+    // Tambahkan efek aktif saat diklik
+    const menuItems = document.querySelectorAll("#menuItems .nav-link");
+    menuItems.forEach(link => {
+        link.addEventListener("click", () => {
+            menuItems.forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+        });
     });
 </script>
 

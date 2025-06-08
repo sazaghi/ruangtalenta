@@ -1,4 +1,15 @@
 <x-app-layout>
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6',
+            });
+        </script>
+    @endif
+
     @php
         $radius = 45;
         $circumference = 2 * pi() * $radius;
@@ -26,9 +37,11 @@
                                 Incomplete Tasks:
                             </h6>
                             <ul class="mb-3">
-                                <li>Add phone number</li>
-                                <li>Add address</li>
-                                <li>Add bio</li>
+                                @forelse($incompleteFields as $field)
+                                    <li>Add {{ $field }}</li>
+                                @empty
+                                    <li>All profile fields are complete!</li>
+                                @endforelse
                             </ul>
                             <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-primary">Complete Now</a>
                         </div>

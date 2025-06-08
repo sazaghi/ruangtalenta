@@ -39,6 +39,32 @@ class DashboardController extends Controller
             $userId = auth()->id();
             $bio = Bio::where('user_id', $userId)->first();
             $profileCompletion = $bio ? $bio->completion_percentage : 0;
+            $completionFields = [
+                'contact_number' => 'phone number',
+                'complete_address' => 'address',
+                'bio' => 'bio',
+                'website' => 'website',
+                'experience' => 'experience',
+                'education_level' => 'education level',
+                'facebook' => 'Facebook',
+                'twitter' => 'Twitter',
+                'instagram' => 'Instagram',
+                'avatar' => 'profile picture',
+                'country' => 'country',
+                'city' => 'city',
+            ];
+
+            $incompleteFields = [];
+
+            if ($bio) {
+                foreach ($completionFields as $key => $label) {
+                    $value = $bio->$key;
+                    if (is_null($value) || trim($value) === '') {
+                        $incompleteFields[] = $label;
+                    }
+                }
+            }
+
 
             // Notifikasi untuk pencari kerja: status lamaran terbaru
             $notifications = Lamaran::with('postKerja')
@@ -60,7 +86,7 @@ class DashboardController extends Controller
                 ->orderBy('jadwal')
                 ->get();
 
-            return view('dashboardpencarikerja', compact('user', 'profileCompletion', 'recentJobs', 'upcomingTests', 'notifications'));
+            return view('dashboardpencarikerja', compact('user', 'profileCompletion', 'incompleteFields', 'recentJobs', 'upcomingTests', 'notifications'));
         }
 
         return abort(403, 'Unauthorized');

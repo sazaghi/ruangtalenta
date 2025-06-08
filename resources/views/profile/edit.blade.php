@@ -1,4 +1,19 @@
 <x-app-layout>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    @endif
+
     <style>
         .skill-badge {
             display: inline-flex;
@@ -78,17 +93,6 @@
                                 <label class="form-label">Bio</label>
                                 <textarea name="bio" class="form-control" rows="3" placeholder="Write a short bio..." autocomplete="off">{{ old('bio', $bio->bio ?? '') }}</textarea>
                             </div>
-
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Experience</label>
-                                    <input type="text" name="experience" class="form-control" placeholder="Enter experience" autocomplete="off" value="{{ old('experience', $bio->experience ?? '') }}">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Education Level</label>
-                                    <input type="text" name="education_level" class="form-control" placeholder="Enter education level" autocomplete="off" value="{{ old('education_level', $bio->education_level ?? '') }}">
-                                </div>
-                            </div>
                             <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save me-1"></i> Save Changes
                             </button>
@@ -106,19 +110,19 @@
                         <div class="card-header">Social Network</div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label>Facebook</label>
+                                <label><i class="bi bi-facebook"></i> Facebook</label>
                                 <input type="text" name="facebook" class="form-control" 
                                     value="{{ old('facebook', $bio->facebook ?? '') }}" 
                                     placeholder="https://facebook.com/yourhandle" autocomplete="off">
                             </div>
                             <div class="mb-3">
-                                <label>Twitter</label>
+                                <label><i class="bi bi-twitter"></i> Twitter</label>
                                 <input type="text" name="twitter" class="form-control" 
                                     value="{{ old('twitter', $bio->twitter ?? '') }}" 
                                     placeholder="https://twitter.com/yourhandle" autocomplete="off">
                             </div>
                             <div class="mb-3">
-                                <label>Instagram</label>
+                                <label><i class="bi bi-instagram"></i> Instagram</label>
                                 <input type="text" name="instagram" class="form-control" 
                                     value="{{ old('instagram', $bio->instagram ?? '') }}" 
                                     placeholder="https://instagram.com/yourhandle" autocomplete="off">
@@ -143,8 +147,11 @@
                             <div id="skill-tags" class="skill-tags mb-3">
                                 @php
                                     $existingSkills = old('skills', $bio->skills ?? []);
+
+                                    // Kalau string kosong atau "null", ubah ke array kosong
                                     if (is_string($existingSkills)) {
-                                        $existingSkills = json_decode($existingSkills, true);
+                                        $decoded = json_decode($existingSkills, true);
+                                        $existingSkills = is_array($decoded) ? $decoded : [];
                                     }
                                 @endphp
 
@@ -219,28 +226,35 @@
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>Education</span>
-                <button type="button" class="btn btn-sm btn-outline-secondary add-btn" data-bs-toggle="modal" data-bs-target="#educationModal">+ Add Education</button>
+                <button type="button" class="btn btn-sm btn-primary add-btn" data-bs-toggle="modal" data-bs-target="#educationModal">
+                    + Add Education
+                </button>
             </div>
             <div class="card-body" id="education-section">
                 @foreach ($user->educations as $education)
-                    <div class="education-work-entry mb-3">
-                        <div class="year-badge">{{ $education->year }}</div>
-                        <div class="education-work-details">
-                            <div class="education-work-title d-flex justify-content-between">
-                                <span>{{ $education->major }}</span>
-                                <form method="POST" action="{{ route('educations.destroy', $education) }}" onsubmit="return confirm('Are you sure?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">🗑</button>
-                                </form>
+                    <div class="p-3 mb-3">
+                        <div class="d-flex align-items-start">
+                            <span class="badge bg-secondary me-3">{{ $education->year }}</span>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-1">{{ $education->major }}</h6>
+                                    <form method="POST" action="{{ route('educations.destroy', $education) }}" onsubmit="return confirm('Are you sure?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="text-primary mb-1">{{ $education->university }}</div>
+                                <p class="mb-0 text-muted" style="font-size: 0.9rem;">{{ $education->description }}</p>
                             </div>
-                            <div class="university">{{ $education->university }}</div>
-                            <div class="description">{{ $education->description }}</div>
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
+
         <!-- Education Modal -->
         <div class="modal fade" id="educationModal" tabindex="-1" aria-labelledby="educationModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -281,28 +295,33 @@
         <!-- Work and Experience -->
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Work and Experience</span>
-                <button type="button" class="btn btn-sm btn-outline-secondary add-btn" data-bs-toggle="modal" data-bs-target="#addWorkExperienceModal">+ Add Experience</button>
+                <span>Work & Experience</span>
+                <button type="button" class="btn btn-sm btn-primary add-btn" data-bs-toggle="modal" data-bs-target="#addWorkExperienceModal">
+                    + Add Experience
+                </button>
             </div>
             <div class="card-body" id="work-section">
                 @foreach ($user->workExperiences as $experience)
-                    <div class="education-work-entry mb-3">
-                        <div class="year-badge">
-                            {{ \Carbon\Carbon::parse($experience->start_date)->format('Y') }}
-                            -
-                            {{ $experience->end_date ? \Carbon\Carbon::parse($experience->end_date)->format('Y') : 'Present' }}
-                        </div>
-                        <div class="education-work-details">
-                            <div class="education-work-title d-flex justify-content-between">
-                                <span>{{ $experience->position }}</span>
-                                <form method="POST" action="{{ route('work-experiences.destroy', $experience) }}" onsubmit="return confirm('Are you sure?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">🗑</button>
-                                </form>
+                    <div class="p-3 mb-3">
+                        <div class="d-flex align-items-start">
+                            <span class="badge bg-secondary me-3">
+                                {{ \Carbon\Carbon::parse($experience->start_date)->format('Y') }} -
+                                {{ $experience->end_date ? \Carbon\Carbon::parse($experience->end_date)->format('Y') : 'Present' }}
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-1">{{ $experience->position }}</h6>
+                                    <form method="POST" action="{{ route('work-experiences.destroy', $experience) }}" onsubmit="return confirm('Are you sure?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="text-primary mb-1">{{ $experience->company }}</div>
+                                <p class="mb-0 text-muted" style="font-size: 0.9rem;">{{ $experience->description }}</p>
                             </div>
-                            <div class="work">{{ $experience->company }}</div>
-                            <div class="description">{{ $experience->description }}</div>
                         </div>
                     </div>
                 @endforeach
@@ -510,9 +529,10 @@
         }
 
         input.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
-                const value = input.value.trim();
+                let value = input.value.trim().toUpperCase();
+
                 if (value && !skills.includes(value)) {
                     skills.push(value);
                     input.value = '';
@@ -532,6 +552,7 @@
         renderTags(); // initial render
     });
 </script>
+
 
 
 </x-app-layout>

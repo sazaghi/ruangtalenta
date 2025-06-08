@@ -57,13 +57,16 @@ class Bio extends Model
 
         $filled = 0;
         foreach ($fields as $field) {
-            if (!empty($this->$field)) {
+            $value = $this->$field;
+
+            if (!is_null($value) && trim($value) !== '') {
                 $filled++;
             }
         }
 
         return round(($filled / count($fields)) * 100);
     }
+
     public function getSkillsAttribute($value)
     {
         return json_decode($value, true) ?? [];

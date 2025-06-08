@@ -38,7 +38,10 @@ class JobPostController extends Controller
                 'skills' => 'nullable|string',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            dd($e->errors()); // Ini akan menunjukkan error validasinya
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($e->validator)
+                ->with('validation_error', true);
         }
 
         $skillsArray = null;

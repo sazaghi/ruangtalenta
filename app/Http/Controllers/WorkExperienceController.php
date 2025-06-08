@@ -33,7 +33,6 @@ class WorkExperienceController extends Controller
     public function destroy($id)
     {
         $experience = WorkExperience::findOrFail($id);
-        $this->authorize('delete', $experience); // Optional: if using policies
         $experience->delete();
 
         return redirect()->back()->with('success', 'Work experience deleted.');
