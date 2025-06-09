@@ -1,5 +1,5 @@
 @php
-                            $user = Auth::user();
+                            $user = $post->user;
                             $avatar = $user->avatar 
                                 ? $user->avatar  // langsung URL Supabase
                                 : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
