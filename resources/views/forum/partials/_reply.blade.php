@@ -1,9 +1,9 @@
 @php
-    $user = $reply->user;
-    $avatar = $user->avatar 
-        ? Storage::url($user->avatar)
-        : 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32';
-@endphp
+                            $user = Auth::user();
+                            $avatar = $user->avatar 
+                                ? $user->avatar  // langsung URL Supabase
+                                : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
+                        @endphp
 
 <div class="card shadow-sm border-0">
     <div class="card-body pb-2">

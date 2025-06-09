@@ -57,7 +57,7 @@
                             <div class="d-flex mb-4 align-items-center">
                                 <div class="me-4">
                                     @if($bio && $bio->avatar)
-                                        <img src="{{ asset('storage/' . $bio->avatar) }}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
+                                        <img src="{{$bio->avatar}}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
                                     @else
                                         <div style="width: 100px; height: 100px; background: #ccc; border-radius: 8px;"></div>
                                     @endif
@@ -384,7 +384,7 @@
                             <div class="d-flex mb-4 align-items-center">
                                 <div class="me-4">
                                     @if($bio && $bio->avatar)
-                                        <img src="{{ asset('storage/' . $bio->avatar) }}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
+                                        <img src="{{ $bio->avatar }}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
                                     @else
                                         <div style="width: 100px; height: 100px; background: #ccc; border-radius: 8px;"></div>
                                     @endif
@@ -436,19 +436,19 @@
                         <div class="card-header">Social Network</div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label>Facebook</label>
+                                <label><i class="bi bi-facebook"></i> Facebook</label>
                                 <input type="text" name="facebook" class="form-control" 
                                     value="{{ old('facebook', $bio->facebook ?? '') }}" 
                                     placeholder="https://facebook.com/yourhandle" autocomplete="off">
                             </div>
                             <div class="mb-3">
-                                <label>Twitter</label>
+                                <label><i class="bi bi-twitter"></i> Twitter</label>
                                 <input type="text" name="twitter" class="form-control" 
                                     value="{{ old('twitter', $bio->twitter ?? '') }}" 
                                     placeholder="https://twitter.com/yourhandle" autocomplete="off">
                             </div>
                             <div class="mb-3">
-                                <label>Instagram</label>
+                                <label><i class="bi bi-instagram"></i> Instagram</label>
                                 <input type="text" name="instagram" class="form-control" 
                                     value="{{ old('instagram', $bio->instagram ?? '') }}" 
                                     placeholder="https://instagram.com/yourhandle" autocomplete="off">

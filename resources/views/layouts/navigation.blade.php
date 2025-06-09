@@ -27,9 +27,10 @@
                         @php
                             $user = Auth::user();
                             $avatar = $user->avatar 
-                                ? Storage::url($user->avatar)
+                                ? $user->avatar  // langsung URL Supabase
                                 : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
                         @endphp
+
                         <img src="{{ $avatar }}" alt="Avatar" class="rounded-circle" width="32" height="32">
                         <span>{{ $user->name }}</span>
                       </a>

@@ -10,6 +10,7 @@
 </head>
 <body class="bg-light">
 
+
 @include('layouts.navigation')
 
 <div class="container px-3 px-md-5 py-5">
@@ -22,11 +23,17 @@
       </a>
 
       <div class="card shadow-sm border-0 mb-4">
+        @php
+                            $user = Auth::user();
+                            $avatar = $user->avatar 
+                                ? $user->avatar  // langsung URL Supabase
+                                : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
+                        @endphp
         <div class="card-body">
           <h1 class="h5 fw-bold mb-3">{{ $post->title }}</h1>
 
           <div class="d-flex align-items-center text-muted small mb-3">
-            <img src="{{ $post->user->profile_picture_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($post->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
+            <img src="{{ $avatar }}" 
                 alt="Foto Profil" class="rounded-circle me-2" style="width: 24px; height: 24px;">
             <span class="fw-semibold text-dark">{{ $post->user->name ?? 'Unknown' }}</span>
             <span class="mx-2">•</span>
@@ -56,12 +63,20 @@
           <ul class="list-unstyled">
             @foreach ($popularPosts as $p)
             <li class="mb-3">
+              @php
+                  $user = $p->user ?? null;
+                  $avatar = $user?->avatar 
+                      ? $user->avatar 
+                      : 'https://ui-avatars.com/api/?name=' . urlencode($user?->name ?? 'User') . '&background=0D8ABC&color=fff&size=32';
+              @endphp
               <div class="d-flex align-items-center mb-1">
-                <img src="{{ $p->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($p->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
-                   alt="Foto Profil" 
-                   class="rounded-circle me-2" 
-                   style="width: 16px; height: 16px;">
-                <small class="fw-semibold text-dark">{{ $p->user->name ?? 'Unknown' }}</small>
+                  <img src="{{ $avatar }}" 
+                      alt="Foto Profil" 
+                      class="rounded-circle me-2" 
+                      style="width: 16px; height: 16px;"
+                      onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=32';">
+
+                  <small class="fw-semibold text-dark">{{ $user?->name ?? 'Unknown' }}</small>
               </div>
               <a href="{{ route('post.show', $p->id) }}" class="text-decoration-none d-block fw-medium text-primary">
                 {{ \Illuminate\Support\Str::limit($p->title, 60) }}
@@ -79,11 +94,13 @@
             @foreach ($unansweredPosts as $p)
             <li class="mb-3">
               <div class="d-flex align-items-center mb-1">
-                <img src="{{ $p->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($p->user->name ?? 'User') . '&background=0D8ABC&color=fff&size=32' }}" 
-                   alt="Foto Profil" 
-                   class="rounded-circle me-2" 
-                   style="width: 16px; height: 16px;">
-                <small class="fw-semibold text-dark">{{ $p->user->name ?? 'Unknown' }}</small>
+                <img src="{{ $avatar }}" 
+                      alt="Foto Profil" 
+                      class="rounded-circle me-2" 
+                      style="width: 16px; height: 16px;"
+                      onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=32';">
+
+                <small class="fw-semibold text-dark">{{ $user?->name ?? 'Unknown' }}</small>
               </div>
               <a href="{{ route('post.show', $p->id) }}" class="text-decoration-none d-block fw-medium text-primary">
                 {{ \Illuminate\Support\Str::limit($p->title, 60) }}

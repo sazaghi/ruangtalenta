@@ -12,7 +12,7 @@
         <div class="mb-4 d-flex align-items-center">
             <div class="me-3">
                 @if($user->avatar)
-                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" class="rounded-circle" width="96" height="96">
+                    <img src="{{ asset($user->avatar) }}" alt="Avatar" class="rounded-circle" width="96" height="96">
                 @else
                     <div class="bg-secondary rounded-circle" style="width:96px; height:96px;"></div>
                 @endif

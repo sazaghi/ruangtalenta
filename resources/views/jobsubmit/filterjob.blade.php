@@ -170,11 +170,19 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <div class="d-flex align-items-center">
-                  <img src="{{ asset('storage/' . optional($job->company?->profile)->avatar ?? 'default-avatar.png') }}"
-                  onerror="this.src='https://via.placeholder.com/40'"
-                  alt="Logo"
-                  width="40"
-                  class="me-2 rounded-circle">
+                  @php
+                      $avatar = optional($job->company?->profile)->avatar;
+                      $avatarUrl = $avatar 
+                          ? $avatar 
+                          : 'https://via.placeholder.com/40';
+                  @endphp
+
+                  <img src="{{ $avatarUrl }}"
+                      onerror="this.onerror=null;this.src='https://via.placeholder.com/40';"
+                      alt="Logo"
+                      width="40"
+                      class="me-2 rounded-circle">
+
                   <div>
                     <strong class="d-block">{{ $job->company->profile->full_name ?? 'Unknown' }}</strong>
                     <small class="text-muted">{{ $job->location }}</small>

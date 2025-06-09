@@ -1,9 +1,9 @@
 @php
-    $user = $post->user;
-    $avatar = $user->avatar 
-        ? Storage::url($user->avatar)
-        : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
-@endphp
+                            $user = Auth::user();
+                            $avatar = $user->avatar 
+                                ? $user->avatar  // langsung URL Supabase
+                                : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
+                        @endphp
 
 <h2 class="h5 fw-semibold mb-2">
     <a href="{{ route('post.show', ['id' => $post->id]) }}" class="text-decoration-none text-primary">

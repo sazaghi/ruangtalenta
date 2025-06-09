@@ -2,11 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+
 use App\Models\Bio;
 use Illuminate\Http\Request;
 
 class BioController extends Controller
 {
+    function uploadToSupabase($file)
+    {
+        $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+        $bucket = env('SUPABASE_BUCKET');
+        $url = env('SUPABASE_URL') . "/storage/v1/object/$bucket/$fileName";
+
+        $client = new Client();
+        $response = $client->put($url, [
+            'headers' => [
+                'apikey' => env('SUPABASE_API_KEY'),
+                'Authorization' => 'Bearer ' . env('SUPABASE_API_KEY'),
+                'Content-Type' => $file->getMimeType(),
+            ],
+            'body' => fopen($file->getRealPath(), 'r'), // lebih aman dari pada file_get_contents
+        ]);
+
+        if ($response->getStatusCode() === 200) {
+            return env('SUPABASE_URL') . "/storage/v1/object/public/$bucket/$fileName";
+        }
+
+        return null;
+    }
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -35,7 +60,7 @@ class BioController extends Controller
 
         // Proses upload avatar
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
+            $path = $this->uploadToSupabase($request->file('avatar'));
             $validated['avatar'] = $path;
         }
 

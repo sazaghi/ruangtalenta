@@ -84,9 +84,13 @@
 
         <!-- Profile -->
         <div class="text-center w-100">
-            <img src="{{ auth()->user()->profile && auth()->user()->profile->avatar 
-                ? Storage::url(auth()->user()->profile->avatar) 
-                : asset('images/default-avatar.png') }}" 
+            @php
+                            $user = Auth::user();
+                            $avatar = $user->profile->avatar
+                                ? $user->profile->avatar  // langsung URL Supabase
+                                : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
+                        @endphp
+            <img src="{{ $avatar }}" 
                 id="profileImage"
                 class="rounded-circle border border-secondary d-block mx-auto profile-img">
 

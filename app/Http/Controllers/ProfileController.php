@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Bio;
 use Illuminate\Http\RedirectResponse;
@@ -11,7 +14,30 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
-{
+{   
+    function uploadToSupabase($file)
+    {
+        $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+        $bucket = env('SUPABASE_BUCKET');
+        $url = env('SUPABASE_URL') . "/storage/v1/object/$bucket/$fileName";
+
+        $client = new Client();
+        $response = $client->put($url, [
+            'headers' => [
+                'apikey' => env('SUPABASE_API_KEY'),
+                'Authorization' => 'Bearer ' . env('SUPABASE_API_KEY'),
+                'Content-Type' => $file->getMimeType(),
+            ],
+            'body' => fopen($file->getRealPath(), 'r'), // lebih aman dari pada file_get_contents
+        ]);
+
+        if ($response->getStatusCode() === 200) {
+            return env('SUPABASE_URL') . "/storage/v1/object/public/$bucket/$fileName";
+        }
+
+        return null;
+    }
+
     /**
      * Display the user's profile form.
      */
@@ -55,9 +81,10 @@ class ProfileController extends Controller
         $user->fill($request->validated());
 
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $path;
+            $avatarUrl = $this->uploadToSupabase($request->file('avatar'));
+            $user->avatar = $avatarUrl;
         }
+
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
