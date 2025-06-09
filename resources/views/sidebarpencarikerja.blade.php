@@ -85,15 +85,14 @@
         <!-- Profile -->
         <div class="text-center w-100">
             @php
-                            $user = Auth::user();
-                            $avatar = $user->profile->avatar
-                                ? $user->profile->avatar  // langsung URL Supabase
-                                : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
-                        @endphp
+                $user = Auth::user();
+                $avatar = optional($user->profile)?->avatar
+                    ?: 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff&size=32';
+            @endphp
+
             <img src="{{ $avatar }}" 
                 id="profileImage"
                 class="rounded-circle border border-secondary d-block mx-auto profile-img">
-
             <div id="profileDetails" class="mt-2 text-center sidebar-hidden">
                 <h6 class="mb-0 fs-6">{{ Auth::user()->name }}</h6>
             </div>
