@@ -67,7 +67,7 @@
         </div>
         <div class="stat-box">
           <h3>{{ number_format($totalPosts) }}+</h3>
-          <p>Blogs and Comunity</p>
+          <p>Forum and Comunity</p>
         </div>
       </div>
       
