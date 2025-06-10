@@ -45,9 +45,14 @@ class JobPostController extends Controller
         }
 
         $skillsArray = null;
+
         if ($request->filled('skills')) {
-            $skillsArray = array_map('trim', explode(',', $request->skills));
+            $decoded = json_decode($request->skills, true);
+            if (is_array($decoded)) {
+                $skillsArray = array_map('trim', $decoded);
+            }
         }
+
         
         $job = PostKerja::create([
             'user_id' => auth()->id(),

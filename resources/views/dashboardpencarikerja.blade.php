@@ -37,11 +37,15 @@
                                 Incomplete Tasks:
                             </h6>
                             <ul class="mb-3">
-                                @forelse($incompleteFields as $field)
-                                    <li>Add {{ $field }}</li>
-                                @empty
-                                    <li>All profile fields are complete!</li>
-                                @endforelse
+                                @if (!$bio)
+                                    <li>Profile not yet created. Please complete your profile.</li>
+                                @else
+                                    @forelse($incompleteFields as $field)
+                                        <li>Add {{ $field }}</li>
+                                    @empty
+                                        <li>All profile fields are complete!</li>
+                                    @endforelse
+                                @endif
                             </ul>
                             <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-primary">Complete Now</a>
                         </div>

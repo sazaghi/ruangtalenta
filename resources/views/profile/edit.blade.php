@@ -57,13 +57,13 @@
                             <div class="d-flex mb-4 align-items-center">
                                 <div class="me-4">
                                     @if($bio && $bio->avatar)
-                                        <img src="{{$bio->avatar}}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
+                                        <img id="avatarPreview" src="{{ $bio->avatar }}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
                                     @else
-                                        <div style="width: 100px; height: 100px; background: #ccc; border-radius: 8px;"></div>
+                                        <img id="avatarPreview" src="https://via.placeholder.com/100x100?text=Preview" alt="Avatar Preview" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
                                     @endif
                                 </div>
                                 <div>
-                                    <input type="file" name="avatar" accept="image/*" class="form-control">
+                                    <input type="file" name="avatar" id="avatarInput" accept="image/*" class="form-control">
                                 </div>
                             </div>
 
@@ -551,6 +551,12 @@
 
         renderTags(); // initial render
     });
+     document.getElementById('avatarInput').onchange = function (evt) {
+        const [file] = this.files;
+        if (file) {
+        document.getElementById('avatarPreview').src = URL.createObjectURL(file);
+        }
+    }
 </script>
 
 

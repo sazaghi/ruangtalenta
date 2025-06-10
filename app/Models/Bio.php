@@ -55,6 +55,7 @@ class Bio extends Model
             'complete_address'
         ];
 
+        $fields = array_keys(self::getCompletionFields());
         $filled = 0;
         foreach ($fields as $field) {
             $value = $this->$field;
@@ -66,6 +67,27 @@ class Bio extends Model
 
         return round(($filled / count($fields)) * 100);
     }
+    // app/Models/Bio.php
+
+    public static function getCompletionFields()
+    {
+        return [
+            'full_name' => 'full name',
+            'contact_number' => 'phone number',
+            'website' => 'website',
+            'bio' => 'bio',
+            'experience' => 'experience',
+            'education_level' => 'education level',
+            'facebook' => 'Facebook',
+            'twitter' => 'Twitter',
+            'instagram' => 'Instagram',
+            'avatar' => 'profile picture',
+            'country' => 'country',
+            'city' => 'city',
+            'complete_address' => 'address',
+        ];
+    }
+    
 
     public function getSkillsAttribute($value)
     {

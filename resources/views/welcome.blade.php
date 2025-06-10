@@ -51,7 +51,7 @@
       <form action="{{ route('job.show') }}" method="GET">
         <div class="input-group mt-4">
           <input type="text" name="keyword" class="form-control rounded-start" placeholder="Position or company">
-          <button type="submit" class="btn btn-danger rounded-end px-4">Find</button>
+          <button type="submit" class="btn btn-danger rounded-end px-4"><i class="bi bi-search"></i></button>
         </div>
       </form>
 
@@ -59,15 +59,15 @@
       <div class="d-flex mt-5 gap-5 text-white">
         <div class="stat-box">
           <h3>{{ number_format($totalJobs) }}+</h3>
-          <p>Lowongan Tersedia</p>
+          <p>Jobs Avaible</p>
         </div>
         <div class="stat-box">
           <h3>{{ number_format($totalCompanies) }}+</h3>
-          <p>Perusahaan</p>
+          <p>Company</p>
         </div>
         <div class="stat-box">
           <h3>{{ number_format($totalPosts) }}+</h3>
-          <p>Blog & Forum</p>
+          <p>Blogs and Comunity</p>
         </div>
       </div>
       
@@ -141,10 +141,12 @@
               @endforeach
             </div>
 
-            <strong class="fs-6 text-dark">
-              Rp {{ number_format($job->salary_min, 0, ',', '.') }} - Rp {{ number_format($job->salary_max, 0, ',', '.') }}
-            </strong>
-
+            <div class="d-flex flex-column align-items-start">
+              <span class="badge bg-warning mb-1">Salary</span>
+              <strong class="fs-6 text-dark">
+                Rp {{ number_format($job->salary_min, 0, ',', '.') }} - Rp {{ number_format($job->salary_max, 0, ',', '.') }}
+              </strong>
+            </div>
             @if (auth()->check() && auth()->user()->hasRole('pencarikerja'))
               @if ($needsResume || $needsLetter || $needsPortofolio)
               <button 
@@ -221,9 +223,8 @@
       <div class="col-md-4 mb-4">
         <div class="d-flex align-items-center mb-2">
           <img src="https://figmage.com/images/MxRP4yFlcG5FSL9xhYLr8.png" alt="Logo" width="40" class="me-2">
-          <h5 class="mb-0 fw-bold">Ruang Talenta</h5>
         </div>
-        <p class="small">Ruang Talenta membantu Anda terhubung dengan peluang kerja dan pengembangan skill.</p>
+        <p class="small">Ruang Talenta helps you connect with job opportunities and skill development.</p>
       </div>
 
       <div class="col-md-4 mb-4">
@@ -237,7 +238,7 @@
       </div>
 
       <div class="col-md-4 mb-4">
-        <h6 class="fw-bold mb-3">Media Sosial</h6>
+        <h6 class="fw-bold mb-3">Social Media</h6>
         <div class="d-flex justify-content-center justify-content-md-start gap-3">
           <a href="#" class="text-white fs-5"><i class="bi bi-instagram"></i></a>
           <a href="#" class="text-white fs-5"><i class="bi bi-x"></i></a>

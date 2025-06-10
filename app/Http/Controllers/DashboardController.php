@@ -36,25 +36,26 @@ class DashboardController extends Controller
             return view('dashboardperusahaan', compact('user', 'recentJobs','jobList', 'notifications'));
 
         } elseif ($user->hasRole('pencarikerja')) {
-            $userId = auth()->id();
+            $user = auth()->user();
+            $userId = $user->id;
             $bio = Bio::where('user_id', $userId)->first();
             $profileCompletion = $bio ? $bio->completion_percentage : 0;
-            $completionFields = [
-                'contact_number' => 'phone number',
-                'complete_address' => 'address',
-                'bio' => 'bio',
-                'website' => 'website',
-                'experience' => 'experience',
-                'education_level' => 'education level',
-                'facebook' => 'Facebook',
-                'twitter' => 'Twitter',
-                'instagram' => 'Instagram',
-                'avatar' => 'profile picture',
-                'country' => 'country',
-                'city' => 'city',
-            ];
+            $completionFields = \App\Models\Bio::getCompletionFields();
 
             $incompleteFields = [];
+            if ($bio) {
+                foreach ($completionFields as $key => $label) {
+                    $value = $bio->$key;
+                    if (is_null($value) || trim($value) === '') {
+                        $incompleteFields[] = $label;
+                    }
+                }
+
+                $profileCompletion = $bio->completion_percentage;
+            } else {
+                $incompleteFields = array_values($completionFields);
+                $profileCompletion = 0;
+            }
 
             if ($bio) {
                 foreach ($completionFields as $key => $label) {
@@ -86,7 +87,7 @@ class DashboardController extends Controller
                 ->orderBy('jadwal')
                 ->get();
 
-            return view('dashboardpencarikerja', compact('user', 'profileCompletion', 'incompleteFields', 'recentJobs', 'upcomingTests', 'notifications'));
+            return view('dashboardpencarikerja', compact('user', 'profileCompletion', 'recentJobs', 'upcomingTests', 'notifications', 'bio'))->with('incompleteFields', array_slice($incompleteFields, 0, 3));
         }
 
         return abort(403, 'Unauthorized');

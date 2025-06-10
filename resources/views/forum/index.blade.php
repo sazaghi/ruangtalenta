@@ -6,13 +6,29 @@
     <link rel="icon" type="image/png" href="{{ asset('images/page_logo.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .modal-custom {
             background-color: rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
+@if (session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Oke'
+        });
+    });
+</script>
+@endif
+
 <body class="bg-light">
+    
 
     @include('layouts.navigation')
 
