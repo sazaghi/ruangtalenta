@@ -14,14 +14,14 @@
                 @csrf
 
                 <div class="mb-3 text-start">
-                    <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" required autofocus>
+                    <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" required autofocu required placeholder="E-mail">
                     @error('email')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
                 <div class="mb-3 text-start">
-                    <input type="password" class="form-control" name="password" id="password" required>
+                    <input type="password" class="form-control" name="password" id="password" required required placeholder="Password">
                     @error('password')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror

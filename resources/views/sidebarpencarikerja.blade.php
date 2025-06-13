@@ -79,7 +79,7 @@
 
         <!-- Logo -->
         <div id="sidebarLogo" class="mb-4 sidebar-hidden w-100 text-center">
-            <img src="{{ asset('images/ruang-talenta-img-1.png') }}" alt="Logo" style="max-width: 100px;">
+            <img src="{{ asset('images/logo-light.png') }}" alt="Logo" style="max-width: 100px; top;20px;">
         </div>
 
         <!-- Profile -->
