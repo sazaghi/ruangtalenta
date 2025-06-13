@@ -35,8 +35,8 @@
         }
 
         .logo {
-            top: 20px;
-            left: 20px;
+            top: 40px;
+            left: 40px;
             width: 200px;
         }
 
@@ -75,7 +75,7 @@
 </head>
 <body>
     <!-- Background Elements -->
-    <img src="{{ asset('images/ruang-talenta-img-1.png') }}" alt="Ruang Talenta Logo" class="background-element logo" />
+    <img src="{{ asset('images/logo-light.png') }}" alt="Ruang Talenta Logo" class="background-element logo" />
     <img src="{{ asset('images/rubiks-cube.png') }}" alt="Top Right Cube" class="background-element cube-top-right" />
     <img src="{{ asset('images/cube-of-square-blocks.png') }}" alt="Bottom Left Cube" class="background-element cube-bottom-left" />
 

@@ -79,7 +79,7 @@
 
         <!-- Logo -->
         <div id="sidebarLogo" class="mb-4 sidebar-hidden w-100 text-center">
-            <img src="{{ asset('images/ruang-talenta-img-1.png') }}" alt="Logo" style="max-width: 100px;">
+            <img src="{{ asset('images/logo-light.png') }}" alt="Logo" style="max-width: 100px; top;20px;">
         </div>
 
         <!-- Profile -->
@@ -104,37 +104,37 @@
             <li class="nav-item mb-2">
                 <a href="{{ route('dashboard') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-house-door me-2"></i>
-                    <span class="menu-label d-none">Dashboard</span>
+                    <span class="menu-label sidebar-hidden">Dashboard</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
                 <a href="{{ route('profile.edit') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-person me-2"></i>
-                    <span class="menu-label d-none">My Profile</span>
+                    <span class="menu-label sidebar-hidden">My Profile</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
                 <a href="{{ route('calendar') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-calendar me-2"></i>
-                    <span class="menu-label d-none">Calendar</span>
+                    <span class="menu-label sidebar-hidden">Calendar</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
                 <a href="{{ route('job.store') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-briefcase me-2"></i>
-                    <span class="menu-label d-none">Jobs</span>
+                    <span class="menu-label sidebar-hidden">Jobs</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
                 <a href="{{ route('job.candidate') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-person-workspace me-2"></i>
-                    <span class="menu-label d-none">Candidate</span>
+                    <span class="menu-label sidebar-hidden">Candidate</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
                 <a href="{{ route('logout') }}" class="nav-link text-dark d-flex align-items-center">
                     <i class="bi bi-door-closed me-2"></i>
-                    <span class="menu-label d-none">Logout</span>
+                    <span class="menu-label sidebar-hidden">Logout</span>
                 </a>
             </li>
         </ul>

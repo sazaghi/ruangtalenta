@@ -9,7 +9,6 @@
             @csrf
 
             <div class="mb-3 text-start">
-                <label for="name" class="form-label">Name</label>
                 <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus placeholder="Name">
                 @error('name')
                     <small class="text-danger">{{ $message }}</small>
@@ -17,7 +16,6 @@
             </div>
 
             <div class="mb-3 text-start">
-                <label for="email" class="form-label">E-mail</label>
                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required placeholder="E-mail">
                 @error('email')
                     <small class="text-danger">{{ $message }}</small>
@@ -25,7 +23,6 @@
             </div>
 
             <div class="mb-3 text-start">
-                <label for="password" class="form-label">Password</label>
                 <input id="password" type="password" class="form-control" name="password" required placeholder="Password">
                 @error('password')
                     <small class="text-danger">{{ $message }}</small>
@@ -33,7 +30,6 @@
             </div>
 
             <div class="mb-3 text-start">
-                <label for="password_confirmation" class="form-label">Re-password</label>
                 <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required placeholder="Re-password">
                 @error('password_confirmation')
                     <small class="text-danger">{{ $message }}</small>

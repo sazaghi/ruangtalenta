@@ -222,7 +222,7 @@
     <div class="row text-center text-md-start">
       <div class="col-md-4 mb-4">
         <div class="d-flex align-items-center mb-2">
-          <img src="https://figmage.com/images/MxRP4yFlcG5FSL9xhYLr8.png" alt="Logo" width="40" class="me-2">
+          <img src="{{ asset('images/logo-dark.png') }}" alt="Logo" width="80" class="me-2">
         </div>
         <p class="small">Ruang Talenta helps you connect with job opportunities and skill development.</p>
       </div>

@@ -14,7 +14,6 @@
                 @csrf
 
                 <div class="mb-3 text-start">
-                    <label for="email" class="form-label">E-mail</label>
                     <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" required autofocus>
                     @error('email')
                         <small class="text-danger">{{ $message }}</small>
@@ -22,7 +21,6 @@
                 </div>
 
                 <div class="mb-3 text-start">
-                    <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" name="password" id="password" required>
                     @error('password')
                         <small class="text-danger">{{ $message }}</small>

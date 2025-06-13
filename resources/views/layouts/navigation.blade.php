@@ -1,7 +1,7 @@
 <nav id="navbar" class="navbar navbar-expand-lg navbar-light shadow-sm px-3 sticky-top" style="background-color: #222D65; font-family: 'Poppins', sans-serif; font-size: 16px;">
   <div class="container-fluid">
         <a class="navbar-brand fw-bold d-flex align-items-center gap-1" href="{{ route('home') }}">
-            <img src="https://figmage.com/images/MxRP4yFlcG5FSL9xhYLr8.png" alt="Logo" style="height: 40px;">
+            <img src="{{ asset('images/logo-dark.png') }}" alt="Logo" style="height: 20px;">
         </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
           <span class="navbar-toggler-icon"></span>

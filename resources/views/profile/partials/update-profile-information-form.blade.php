@@ -11,15 +11,15 @@
         <!-- Avatar -->
         <div class="mb-4 d-flex align-items-center">
             <div class="me-3">
-                @if($user->avatar)
-                    <img src="{{ asset($user->avatar) }}" alt="Avatar" class="rounded-circle" width="96" height="96">
+                @if($user && $user->avatar)
+                    <img id="avatarPreview" src="{{ asset($user->avatar) }}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
                 @else
-                    <div class="bg-secondary rounded-circle" style="width:96px; height:96px;"></div>
+                    <img id="avatarPreview" src="https://via.placeholder.com/100x100?text=Preview" alt="Avatar Preview" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">
                 @endif
             </div>
             <div>
-                <label for="avatar" class="form-label">Upload Avatar</label>
-                <input type="file" class="form-control" name="avatar" id="avatar" accept="image/*">
+                <label for="imgInp" class="form-label">Upload Avatar</label>
+                <input type="file" class="form-control" name="avatar" id="imgInp" accept="image/*">
                 @error('avatar')
                     <div class="text-danger mt-1">{{ $message }}</div>
                 @enderror
@@ -56,4 +56,16 @@
         </div>
     </form>
 
+    <!-- Avatar Preview Script -->
+    <script>
+        const imgInp = document.getElementById('imgInp');
+        const avatarPreview = document.getElementById('avatarPreview');
+
+        imgInp.onchange = evt => {
+            const [file] = imgInp.files;
+            if (file) {
+                avatarPreview.src = URL.createObjectURL(file);
+            }
+        };
+    </script>
 </section>
